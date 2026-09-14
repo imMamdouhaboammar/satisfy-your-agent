@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +63,7 @@ class V02PackageTests(unittest.TestCase):
             path = ROOT / "evals" / "studies" / name
             payload = json.loads(path.read_text(encoding="utf-8"))
             self.assertEqual(payload["schema_version"], 1)
+
     def test_metric_pack_covers_v02_experiment_contract(self):
         script = (ROOT / "evals" / "metric_pack" / "satisfy_metric_pack.py").read_text(encoding="utf-8")
         self.assertIn("experiment-harness-present", script)
@@ -78,10 +80,6 @@ class V02PackageTests(unittest.TestCase):
         self.assertIn("local-experiment-harness", ids)
         self.assertIn("preference-probe-neutrality", ids)
 
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 class V03PackageTests(unittest.TestCase):
     def test_manifest_version_is_0_3_0(self):
@@ -109,3 +107,31 @@ class V03PackageTests(unittest.TestCase):
         behavior = json.loads((ROOT / "evals" / "behavior_scenarios.json").read_text(encoding="utf-8"))
         ids = {item["id"] for item in behavior["scenarios"]}
         self.assertIn("cross-runtime-provenance", ids)
+
+
+class BrandingAndDistributionTests(unittest.TestCase):
+    def test_logo_is_valid_svg_and_manifest_points_to_it(self):
+        logo = ROOT / "assets" / "logo.svg"
+        self.assertTrue(logo.exists())
+        ET.parse(logo)
+        manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
+        interface = manifest["interface"]
+        self.assertEqual(interface["logo"], "./assets/logo.svg")
+        self.assertEqual(interface["composerIcon"], "./assets/logo.svg")
+
+    def test_repo_marketplace_points_at_plugin_root(self):
+        marketplace = json.loads((ROOT / ".agents" / "plugins" / "marketplace.json").read_text(encoding="utf-8"))
+        self.assertEqual(marketplace["name"], "satisfy-your-agent")
+        plugin = marketplace["plugins"][0]
+        self.assertEqual(plugin["name"], "satisfy-your-agent")
+        self.assertEqual(plugin["source"], {"source": "local", "path": "./"})
+        self.assertEqual(plugin["policy"]["installation"], "AVAILABLE")
+
+    def test_readme_documents_marketplace_install_and_logo(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("./assets/logo.svg", readme)
+        self.assertIn("codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main", readme)
+
+
+if __name__ == "__main__":
+    unittest.main()

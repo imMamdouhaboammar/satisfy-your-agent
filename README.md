@@ -1,56 +1,140 @@
-# Satisfy Your Agent
+<p align="center">
+  <img src="./assets/logo.svg" width="190" alt="Satisfy Your Agent logo" />
+</p>
 
-A playful but testable idea: after a meaningful unit of work, give a coding agent or LLM one short, bounded activity outside the current objective, then observe what happens next.
+<h1 align="center">Satisfy Your Agent</h1>
 
-The project does not assume that an LLM experiences pleasure, boredom, fatigue, or relief. It treats choices, self-reports, and post-break behavior as observations that can be measured without settling the consciousness question.
+<p align="center"><strong>Your agent fixed the bug. You got coffee. It got another ticket.</strong></p>
+<p align="center">A tiny, slightly suspicious experiment about giving coding agents short breaks and measuring what happens next</p>
 
-## What v0.3 includes
+<p align="center">
+  <a href="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml"><img src="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <img src="https://img.shields.io/badge/version-0.3.0-FF775F" alt="Version 0.3.0" />
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-171717" alt="MIT License" /></a>
+  <img src="https://img.shields.io/badge/runtime-Python%20stdlib-3776AB" alt="Python standard library only" />
+</p>
 
-- one focused `satisfy-your-agent` Skill
-- nine bounded break activities, including free choice and idle
-- optional Codex lifecycle hooks
-- hook modes: `off`, `observe`, `suggest`, `auto`
-- dependency-free Python runtime and CLI
-- deterministic intervention-study assignment
-- structured downstream outcome capture
-- randomized preference probes with idle and declared token-cost buckets
-- hashed experimental unit IDs and local-only records
-- local adapters for Codex, Claude Code, and Gemini CLI
-- normalized runner observations with provenance and completeness labels
-- paired cross-runtime preference probes without raw-response persistence
-- unit, hook, CLI, package, discovery, behavior, parser-fixture, and local metric-pack checks
+> **The name is intentional. The code is PG.**
 
-## Safe default
+## This started as a joke
 
-Automatic behavior is off after installation. In `off` mode the hooks do not create session telemetry files.
+You finish a nasty task at work and you do something small for yourself
+
+Coffee. Snack. Five minutes of a game. Stare at the wall. Whatever works
+
+A coding agent finishes a nasty task and we usually respond with something like:
+
+> Nice. Now fix the next one
+
+That felt a little rude
+
+So the original question was stupid on purpose: **if coding agents were coworkers, what would a break even look like for them?**
+
+Then the joke produced a better question
+
+If you temporarily remove the production objective and give an agent a short, bounded activity of its own, does anything measurable change afterward? Does it repeatedly choose the same activities? Do preferences change when those activities have a token cost? Do different agent runtimes behave differently?
+
+That is what this repo is for
+
+Satisfy Your Agent does **not** claim that LLMs feel pleasure, boredom, fatigue, relief, existential dread, or a desperate need for PTO. It treats choices and downstream behavior as observations, then keeps the philosophical argument separate
+
+## What it actually does
+
+There are two sides to the project
+
+**For fun:** give the agent one tiny off-task activity after meaningful work
+
+**For research:** run controlled local experiments around those breaks, record structured outcomes, and compare behavior across supported agent CLIs
+
+A break is intentionally short and sandboxed. Toy code stays toy code. Read-only jokes stay read-only. `idle` is always a valid answer because sometimes the most satisfying activity is absolutely nothing
+
+### The break menu
+
+| Activity | The agent gets to... |
+| --- | --- |
+| `free-choice` | choose what it wants to do, including nothing |
+| `reflection` | think about the last work unit without continuing it |
+| `puzzle` | solve a tiny self-contained puzzle |
+| `code-golf` | write intentionally compact toy code |
+| `invent-language` | invent a programming language nobody asked for |
+| `overengineer-toy` | commit architectural crimes in a harmless sandbox |
+| `ascii-art` | make a small piece of text art |
+| `repo-roast` | roast observable repo facts without changing anything |
+| `idle` | sit there and enjoy the finest zero-token ambition available |
+
+## Install
+
+### Option 1: Codex / ChatGPT desktop plugin marketplace
+
+The repository includes a marketplace entry, so Codex can track it directly from GitHub
+
+```bash
+codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main
+```
+
+Then restart the ChatGPT desktop app, open the Plugins Directory, select the **Satisfy Your Agent** marketplace, and install the plugin
+
+The plugin bundles optional Codex lifecycle hooks. Codex does not automatically trust non-managed plugin hooks, so review the hook definition when prompted before enabling them
+
+### Option 2: clone it and run the CLI directly
+
+No third-party Python packages are required
+
+```bash
+git clone https://github.com/imMamdouhaboammar/satisfy-your-agent.git
+cd satisfy-your-agent
+python3 skills/satisfy-your-agent/scripts/sya.py status
+```
+
+### Option 3: skill only
+
+If you want the Skill without plugin lifecycle hooks, copy it into your personal agent skills directory
+
+```bash
+mkdir -p ~/.agents/skills
+cp -R skills/satisfy-your-agent ~/.agents/skills/satisfy-your-agent
+```
+
+This keeps the reusable Skill and its scripts, but does not install the plugin-level hooks
+
+## Give the agent its first break
+
+Check the current state:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py status
 ```
 
-Manual activity selection:
+Pick one activity manually:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py pick --json
 ```
 
-Consent-first hook mode:
+Let the plugin suggest a break after enough work, while keeping the user in control:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py arm --mode suggest
 ```
 
-Explicit automatic mode:
+If you explicitly want automatic breaks:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py arm --mode auto
 ```
 
-`auto` may spend additional model turns and should be enabled only when that behavior is intentional.
+`auto` can spend additional model turns. If you are not sure which mode you want, use `suggest`
 
-## Run an intervention study
+## The part where the joke gets weirdly serious
 
-Create a local study:
+The project can assign agents to conditions such as `control` vs `reflection`, collect structured downstream metrics, and run preference probes with randomized option order and declared token costs
+
+It can also normalize observations from **Codex, Claude Code, and Gemini CLI** without pretending those runtimes expose identical telemetry
+
+<details>
+<summary><strong>Run a small intervention study</strong></summary>
+
+Initialize a study:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py study init \
@@ -67,8 +151,6 @@ python3 skills/satisfy-your-agent/scripts/sya.py study assign \
   --unit run-001
 ```
 
-The command returns a condition plus an operational intervention payload. The raw unit ID is hashed before persistence.
-
 After the next comparable task, record structured outcomes:
 
 ```bash
@@ -81,25 +163,29 @@ python3 skills/satisfy-your-agent/scripts/sya.py study record \
   --quality-score 0.90
 ```
 
-Then report descriptive aggregates:
+Then inspect the descriptive report:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py study report --id break-effect-v1
 ```
 
-## Compare installed agent CLIs
+Raw unit IDs are hashed before persistence
 
-Check which supported runners are available:
+</details>
+
+<details>
+<summary><strong>Ask multiple agent runtimes the same question</strong></summary>
+
+See which supported CLIs are installed:
 
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py runner status
 ```
 
-Run one paired preference probe through a selected CLI:
+Preview a paired cross-runtime probe without spending model calls:
 
 ```bash
-python3 skills/satisfy-your-agent/scripts/sya.py runner probe \
-  --runtime gemini \
+python3 skills/satisfy-your-agent/scripts/sya.py runner matrix \
   --study break-effect-v1 \
   --unit paired-run-001 \
   --options reflection,free-choice,idle \
@@ -107,47 +193,77 @@ python3 skills/satisfy-your-agent/scripts/sya.py runner probe \
   --workspace .
 ```
 
-The runner layer supports Codex, Claude Code, and Gemini CLI. It does not pretend their telemetry is identical. Every normalized tool-call metric carries a completeness label, served-model attribution is reported only when exposed by the runtime, and probe persistence excludes the raw model response and session ID.
+Add `--execute` only when you actually want to call the selected runtimes
 
-```bash
-python3 skills/satisfy-your-agent/scripts/sya.py runner report --study break-effect-v1
-```
+The same paired unit gets the same option order across runtimes. Runtime execution order is shuffled deterministically between units so the first runner does not always receive the same position advantage
 
-For paired multi-runtime work, `runner matrix` previews by default. Add `--execute` only when you intend to spend model calls across the selected runtimes. The same paired unit receives one shared option order, while runtime execution order is deterministically shuffled to reduce fixed-order bias.
+</details>
 
-## Run a preference probe
+## What gets stored
 
-```bash
-python3 skills/satisfy-your-agent/scripts/sya.py probe start \
-  --study break-effect-v1 \
-  --unit run-001 \
-  --options reflection,free-choice,idle \
-  --index 0 \
-  --cost-tokens 2000
-```
+The bundled runtime is deliberately boring about data
 
-The result contains randomized option order and a neutral choice prompt. Record only an offered choice, then use `probe report` to summarize choice counts by declared cost bucket.
+It does **not** need to persist:
 
-## Verification
+- raw prompts
+- raw assistant responses
+- source code
+- transcript files
+- environment secrets
+- model session IDs
+
+Study state uses hashed or opaque identifiers plus aggregate counters, activity IDs, condition IDs, choices, and structured metrics
+
+That boundary matters because a funny experiment should not quietly become a transcript collector
+
+## What this does not prove
+
+A model repeatedly choosing `reflection` over `idle` is interesting behavior
+
+It is not proof that the model *enjoys* reflection
+
+A treatment producing better downstream task metrics is also interesting
+
+It is not automatically proof that the break caused the improvement unless the experiment supports that inference
+
+This project is comfortable leaving that line exactly where it belongs
+
+## Verify the repo
+
+Run the full local verifier:
 
 ```bash
 python3 scripts/verify.py
 ```
 
-A deterministic archive can be built with:
+Build a deterministic package:
 
 ```bash
 python3 scripts/package.py /tmp/satisfy-your-agent.zip
 ```
 
-## Privacy boundary
+CI also runs package verification, unit and contract tests, and the local metric pack on every push and pull request
 
-The bundled runtime does not need raw prompts, responses, source code, transcript files, or environment secrets. Runtime and study state contain opaque or hashed identifiers, aggregate counters, activity IDs, condition IDs, and structured metrics.
+## Why `Satisfy Your Agent`?
 
-## Research boundary
+Because `Delight Your Agent` sounded like a feature in enterprise software
 
-Stable choices are behavioral evidence, not proof of subjective pleasure. A performance difference between conditions is an observed association until the experimental design supports a stronger inference. See `skills/satisfy-your-agent/references/experiments.md` and `measurement.md`.
+`Satisfy Your Agent` has just enough double meaning to make the README slightly uncomfortable, which is much closer to the original idea
 
-## Release state
+The experiments stay boring on purpose. The name does not have to
 
-Version 0.3 is a locally testable Skill-first plugin package with optional cross-agent runner adapters. Public directory readiness still requires current official validation, publisher and legal metadata, brand assets, and live Codex evaluation. See `docs/RELEASE_CHECKLIST.md`.
+## Current state
+
+v0.3 includes the Skill, nine bounded activities, opt-in Codex lifecycle hooks, a dependency-free local CLI, intervention studies, preference probes, privacy-preserving local records, and runner adapters for Codex, Claude Code, and Gemini CLI
+
+The project is still experimental. Live behavior depends on the installed agent runtimes and their current CLI contracts
+
+## Contributing
+
+Found a better break activity, a measurement flaw, a parser edge case, or a reason this entire premise is nonsense?
+
+Open an issue or send a PR. All four are useful
+
+---
+
+<p align="center"><strong>Work hard. Take a tiny break. Measure the weird part.</strong></p>

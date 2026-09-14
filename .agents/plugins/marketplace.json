@@ -1,0 +1,20 @@
+{
+  "name": "satisfy-your-agent",
+  "interface": {
+    "displayName": "Satisfy Your Agent"
+  },
+  "plugins": [
+    {
+      "name": "satisfy-your-agent",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
