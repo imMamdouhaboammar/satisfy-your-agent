@@ -1,0 +1,17 @@
+{
+  "$schema": "https://skills.sh/schema.json",
+  "name": "satisfy-your-agent",
+  "version": "0.4.0",
+  "description": "Give your coding agent a short break after real work, then measure what happens next",
+  "repository": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
+  "author": "Mamdouh Aboammar",
+  "license": "MIT",
+  "skill": "skills/satisfy-your-agent/SKILL.md",
+  "tags": [
+    "agent-skill",
+    "agent-behavior",
+    "llm-experiments",
+    "developer-tools",
+    "coding-agents"
+  ]
+}

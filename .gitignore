@@ -16,3 +16,9 @@ Thumbs.db
 .venv/
 venv/
 env/
+
+# Node / Bun
+node_modules/
+bun.lockb
+.bun/
+*.tgz

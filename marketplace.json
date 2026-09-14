@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/claude-plugin-manifest.json",
+  "name": "satisfy-your-agent",
+  "displayName": "Satisfy Your Agent",
+  "version": "0.4.0",
+  "description": "A playful, opt-in break protocol and local experiment harness for bounded off-task activities, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
+  "author": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
+  "homepage": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imMamdouhaboammar/satisfy-your-agent.git"
+  },
+  "license": "MIT",
+  "categories": [
+    "developer-tools",
+    "agent-tools",
+    "experiments"
+  ],
+  "compatibility": {
+    "claudeCode": ">=1.0.0",
+    "claudeDesktop": ">=1.0.0",
+    "cursor": ">=0.40.0",
+    "codex": ">=0.1.0",
+    "opencode": ">=1.0.0",
+    "antigravity": ">=1.0.0"
+  },
+  "entrypoint": "skills/satisfy-your-agent/SKILL.md",
+  "bin": {
+    "satisfy-your-agent": "./bin/cli.js"
+  }
+}

@@ -9,9 +9,22 @@
 
 <p align="center">
   <a href="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml"><img src="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <img src="https://img.shields.io/badge/version-0.3.0-FF775F" alt="Version 0.3.0" />
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-171717" alt="MIT License" /></a>
-  <img src="https://img.shields.io/badge/runtime-Python%20stdlib-3776AB" alt="Python standard library only" />
+  <img src="https://img.shields.io/badge/version-0.4.0-FF775F?style=flat-square" alt="Version 0.4.0" />
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License" /></a>
+  <img src="https://img.shields.io/badge/runtime-Python%20stdlib-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python standard library only" />
+  <a href="https://skills.sh"><img src="https://img.shields.io/badge/Skills.sh-Compatible-000000?style=flat-square&logo=vercel&logoColor=white" alt="Skills.sh" /></a>
+  <a href="https://claude.ai"><img src="https://img.shields.io/badge/Claude%20Code-Compatible-D97706?style=flat-square&logo=anthropic&logoColor=white" alt="Claude Code" /></a>
+  <img src="https://img.shields.io/badge/Codex-Compatible-10a37f?style=flat-square&logo=openai&logoColor=white" alt="Codex" />
+  <img src="https://img.shields.io/badge/Antigravity-Compatible-4285F4?style=flat-square&logo=google&logoColor=white" alt="Antigravity" />
+</p>
+
+<p align="center">
+  <a href="#this-started-as-a-joke">Story</a> &bull;
+  <a href="#install">Install</a> &bull;
+  <a href="#the-break-menu">Activities</a> &bull;
+  <a href="#the-part-where-the-joke-gets-weirdly-serious">Research</a> &bull;
+  <a href="#cli-reference">CLI</a> &bull;
+  <a href="#contributing">Contributing</a>
 </p>
 
 > **The name is intentional. The code is PG.**
@@ -62,11 +75,53 @@ A break is intentionally short and sandboxed. Toy code stays toy code. Read-only
 | `repo-roast` | roast observable repo facts without changing anything |
 | `idle` | sit there and enjoy the finest zero-token ambition available |
 
+## Architecture
+
+```mermaid
+flowchart TD
+    A["User / Agent CLI"] -->|"break request"| B["SKILL.md Router"]
+    B --> C{"Mode?"}
+    C -->|"manual"| D["Activity Picker"]
+    C -->|"suggest"| E["Consent Gate"]
+    C -->|"auto"| F["Eligibility Check"]
+    C -->|"research"| G["Experiment Harness"]
+    E -->|"approved"| D
+    F -->|"eligible"| D
+    D --> H["Bounded Activity"]
+    H --> I["Return to Work"]
+    G --> J["Study Assignment"]
+    J --> K["Paired Runner Matrix"]
+    K -->|"Codex"| L["Codex CLI"]
+    K -->|"Claude"| M["Claude Code CLI"]
+    K -->|"Gemini"| N["Gemini CLI"]
+    L --> O["Normalized Observations"]
+    M --> O
+    N --> O
+    O --> P["Descriptive Report"]
+```
+
 ## Install
 
-### Option 1: Codex / ChatGPT desktop plugin marketplace
+### Option 1: npx / bunx zero-install
 
-The repository includes a marketplace entry, so Codex can track it directly from GitHub
+No cloning required. Runs the CLI directly from the npm registry:
+
+```bash
+npx satisfy-your-agent status
+bunx satisfy-your-agent pick --json
+```
+
+### Option 2: Universal multi-agent installer
+
+Clone the repo and install the skill into every detected agent environment:
+
+```bash
+git clone https://github.com/imMamdouhaboammar/satisfy-your-agent.git
+cd satisfy-your-agent
+bash install.sh
+```
+
+### Option 3: Codex / ChatGPT desktop plugin marketplace
 
 ```bash
 codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main
@@ -74,9 +129,13 @@ codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main
 
 Then restart the ChatGPT desktop app, open the Plugins Directory, select the **Satisfy Your Agent** marketplace, and install the plugin
 
-The plugin bundles optional Codex lifecycle hooks. Codex does not automatically trust non-managed plugin hooks, so review the hook definition when prompted before enabling them
+### Option 4: Skills.sh
 
-### Option 2: clone it and run the CLI directly
+```bash
+npx skills add https://github.com/imMamdouhaboammar/satisfy-your-agent
+```
+
+### Option 5: Clone and run the CLI directly
 
 No third-party Python packages are required
 
@@ -86,16 +145,25 @@ cd satisfy-your-agent
 python3 skills/satisfy-your-agent/scripts/sya.py status
 ```
 
-### Option 3: skill only
+### Option 6: Skill only
 
-If you want the Skill without plugin lifecycle hooks, copy it into your personal agent skills directory
+Copy the Skill into your personal agent skills directory:
 
 ```bash
 mkdir -p ~/.agents/skills
 cp -R skills/satisfy-your-agent ~/.agents/skills/satisfy-your-agent
 ```
 
-This keeps the reusable Skill and its scripts, but does not install the plugin-level hooks
+### Install matrix
+
+| Method | Command | What you get |
+| --- | --- | --- |
+| **npx / bunx** | `npx satisfy-your-agent` | CLI via npm registry |
+| **install.sh** | `bash install.sh` | Skill in all detected agent dirs |
+| **Codex marketplace** | `codex plugin marketplace add ...` | Full plugin with hooks |
+| **Skills.sh** | `npx skills add ...` | Skill via Skills.sh hub |
+| **Git clone** | `git clone && python3 sya.py` | Full repo with tests and evals |
+| **Skill copy** | `cp -R skills/... ~/.agents/skills/` | Portable Skill only |
 
 ## Give the agent its first break
 
@@ -199,6 +267,20 @@ The same paired unit gets the same option order across runtimes. Runtime executi
 
 </details>
 
+## CLI reference
+
+| Command | Description |
+| --- | --- |
+| `sya status` | Show current break state and hook mode |
+| `sya pick [--json]` | Pick a random bounded activity |
+| `sya arm --mode <off\|suggest\|auto>` | Set hook behavior mode |
+| `sya study init --id <id> --conditions <a,b>` | Initialize an intervention study |
+| `sya study assign --id <id> --unit <unit>` | Assign a unit to a study condition |
+| `sya study record --id <id> --trial <tid> ...` | Record structured outcomes |
+| `sya study report --id <id>` | Generate descriptive report |
+| `sya runner status` | Check which agent CLIs are installed |
+| `sya runner matrix --study <id> ...` | Preview or execute cross-runtime probe |
+
 ## What gets stored
 
 The bundled runtime is deliberately boring about data
@@ -254,7 +336,7 @@ The experiments stay boring on purpose. The name does not have to
 
 ## Current state
 
-v0.3 includes the Skill, nine bounded activities, opt-in Codex lifecycle hooks, a dependency-free local CLI, intervention studies, preference probes, privacy-preserving local records, and runner adapters for Codex, Claude Code, and Gemini CLI
+v0.4 includes the Skill (upgraded to OmniSkill patterns), nine bounded activities, opt-in Codex lifecycle hooks, a dependency-free local CLI, intervention studies, preference probes, privacy-preserving local records, runner adapters for Codex, Claude Code, and Gemini CLI, and universal distribution manifests for npm, Skills.sh, Claude Marketplace, and multi-agent installers
 
 The project is still experimental. Live behavior depends on the installed agent runtimes and their current CLI contracts
 
@@ -262,7 +344,7 @@ The project is still experimental. Live behavior depends on the installed agent 
 
 Found a better break activity, a measurement flaw, a parser edge case, or a reason this entire premise is nonsense?
 
-Open an issue or send a PR. All four are useful
+Open an issue or send a PR. All four are useful. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ---
 

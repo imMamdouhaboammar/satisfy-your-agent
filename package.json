@@ -1,0 +1,51 @@
+{
+  "name": "satisfy-your-agent",
+  "version": "0.4.0",
+  "description": "Give your coding agent a short break after real work, then measure what happens next. Bounded activities, preference probes, and cross-runtime experiments for Codex, Claude Code, and Gemini CLI.",
+  "type": "module",
+  "main": "bin/cli.js",
+  "bin": {
+    "satisfy-your-agent": "./bin/cli.js",
+    "sya": "./bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imMamdouhaboammar/satisfy-your-agent.git"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "config",
+    "hooks",
+    "evals",
+    "scripts",
+    "assets",
+    "SKILL.md",
+    "marketplace.json",
+    ".skills.json",
+    "install.sh"
+  ],
+  "scripts": {
+    "start": "bun bin/cli.js",
+    "test": "python3 -m unittest discover -s tests -v",
+    "verify": "python3 scripts/verify.py"
+  },
+  "keywords": [
+    "agent-skill",
+    "skills-sh",
+    "claude-code",
+    "cursor",
+    "codex",
+    "gemini-cli",
+    "antigravity",
+    "agent-behavior",
+    "llm-experiments",
+    "bun"
+  ],
+  "author": "Mamdouh Aboammar <https://github.com/imMamdouhaboammar>",
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0",
+    "node": ">=18.0.0"
+  }
+}

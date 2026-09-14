@@ -11,12 +11,36 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Package verification
         run: python3 scripts/verify.py
+
       - name: Unit and contract tests
         run: python3 -m unittest discover -s tests -v
+
       - name: Local metric pack
         run: python3 evals/metric_pack/satisfy_metric_pack.py .
+
+      - name: CLI entrypoint smoke test
+        run: bun ./bin/cli.js --help
+
+      - name: SKILL.md frontmatter validation
+        run: |
+          python3 -c "
+          content = open('skills/satisfy-your-agent/SKILL.md').read()
+          assert content.startswith('---'), 'Missing YAML frontmatter'
+          assert 'name:' in content, 'Missing name in frontmatter'
+          assert 'description:' in content, 'Missing description in frontmatter'
+          print('SKILL.md validation passed')
+          "
+
+      - name: install.sh syntax check
+        run: bash -n install.sh

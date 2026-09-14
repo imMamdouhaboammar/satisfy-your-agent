@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- upgraded SKILL.md to OmniSkill canonical patterns: 5-phrasing description formula with pushy clause and negatives, pre-flight runtime check, TWI "why" annotations on every operating contract step, inline safety checklist at the break risk point
+- added distribution manifests for universal multi-agent reach: package.json (npm/Bun), marketplace.json (Claude Plugin), .skills.json (Skills.sh Hub)
+- added install.sh universal multi-agent installer (Claude Code, Antigravity, Codex, Cursor, global Agent Skills)
+- added bin/cli.js Node/Bun entrypoint for npx/bunx zero-install execution
+- expanded CI workflow with Bun setup, CLI smoke test, SKILL.md frontmatter validation, and install.sh syntax check
+- added CONTRIBUTING.md and SECURITY.md community health files
+- bumped version to 0.4.0 across plugin.json, package.json, marketplace.json, .skills.json
+
 ## 0.3.0
 
 - added local runner adapters for Codex, Claude Code, and Gemini CLI

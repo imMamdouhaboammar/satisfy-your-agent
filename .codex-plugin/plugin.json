@@ -1,7 +1,8 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A playful, opt-in agent break protocol with local behavioral experiments and cross-agent runner adapters.",
+  "homepage": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "repository": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "license": "MIT",
   "keywords": [

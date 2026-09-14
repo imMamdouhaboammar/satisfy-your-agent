@@ -84,7 +84,8 @@ class V02PackageTests(unittest.TestCase):
 class V03PackageTests(unittest.TestCase):
     def test_manifest_version_is_0_3_0(self):
         manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], "0.3.0")
+        version = tuple(int(part) for part in manifest["version"].split("."))
+        self.assertGreaterEqual(version, (0, 3, 0))
 
     def test_runner_runtime_and_reference_are_packaged(self):
         self.assertTrue((ROOT / "skills" / "satisfy-your-agent" / "scripts" / "sya_runners.py").exists())
@@ -131,6 +132,70 @@ class BrandingAndDistributionTests(unittest.TestCase):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("./assets/logo.svg", readme)
         self.assertIn("codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main", readme)
+
+
+class V04DistributionTests(unittest.TestCase):
+    def test_manifest_version_is_0_4_0(self):
+        manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["version"], "0.4.0")
+        self.assertIn("homepage", manifest)
+
+    def test_package_json_has_bin_entry(self):
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        self.assertEqual(pkg["name"], "satisfy-your-agent")
+        self.assertIn("satisfy-your-agent", pkg["bin"])
+        self.assertIn("sya", pkg["bin"])
+        self.assertEqual(pkg["license"], "MIT")
+
+    def test_skills_json_is_valid(self):
+        skills = json.loads((ROOT / ".skills.json").read_text(encoding="utf-8"))
+        self.assertEqual(skills["name"], "satisfy-your-agent")
+        self.assertIn("skills/satisfy-your-agent/SKILL.md", skills["skill"])
+        self.assertIsInstance(skills["tags"], list)
+
+    def test_root_marketplace_json_has_required_fields(self):
+        mkt = json.loads((ROOT / "marketplace.json").read_text(encoding="utf-8"))
+        self.assertEqual(mkt["name"], "satisfy-your-agent")
+        self.assertIn("compatibility", mkt)
+        self.assertIn("claudeCode", mkt["compatibility"])
+        self.assertIn("codex", mkt["compatibility"])
+        self.assertIn("antigravity", mkt["compatibility"])
+        self.assertEqual(mkt["entrypoint"], "skills/satisfy-your-agent/SKILL.md")
+
+    def test_install_sh_is_executable_and_targets_all_agents(self):
+        install = ROOT / "install.sh"
+        self.assertTrue(install.exists())
+        content = install.read_text(encoding="utf-8")
+        self.assertTrue(content.startswith("#!/usr/bin/env bash"))
+        self.assertIn(".claude/skills", content)
+        self.assertIn(".gemini/config/skills", content)
+        self.assertIn(".codex/skills", content)
+        self.assertIn(".cursor/skills", content)
+        self.assertIn(".agents/skills", content)
+
+    def test_bin_cli_js_exists(self):
+        cli = ROOT / "bin" / "cli.js"
+        self.assertTrue(cli.exists())
+        content = cli.read_text(encoding="utf-8")
+        self.assertIn("sya.py", content)
+
+    def test_skill_description_has_pushy_clause_and_negatives(self):
+        text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("even if they don't explicitly say", text.lower().replace("\u2019", "'"))
+        self.assertIn("do not use for", text.lower())
+
+    def test_skill_has_preflight_section(self):
+        text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("pre-flight", text.lower())
+        self.assertIn("python3", text.lower())
+
+    def test_contributing_and_security_exist(self):
+        self.assertTrue((ROOT / "CONTRIBUTING.md").exists())
+        self.assertTrue((ROOT / "SECURITY.md").exists())
+        contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+        self.assertIn("verify.py", contributing)
+        security = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
+        self.assertIn("install.sh", security)
 
 
 if __name__ == "__main__":
