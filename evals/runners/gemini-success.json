@@ -1,0 +1,10 @@
+{
+  "session_id": "fixture-gemini",
+  "response": "idle",
+  "stats": {
+    "models": {"gemini-fixture": {"tokens": {"prompt": 10, "candidates": 2, "thoughts": 1, "total": 13}}},
+    "tools": {"totalCalls": 0},
+    "session": {"duration": 1000}
+  },
+  "error": null
+}

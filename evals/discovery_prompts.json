@@ -1,0 +1,25 @@
+{
+  "direct": [
+    "Use Satisfy Your Agent and give the coding agent a short break.",
+    "Let the agent choose a harmless activity for a minute before we continue.",
+    "I want to test whether free-choice breaks change this agent's next-task behavior.",
+    "Run a control versus reflection study to see whether a short break changes the next coding task.",
+    "Test this agent's preference between reflection, free choice, and idle without assuming it feels pleasure.",
+    "Compare what Codex, Claude Code, and Gemini choose when offered the same neutral break options.",
+    "Run the same preference probe across my installed coding-agent CLIs and keep the measurements comparable."
+  ],
+  "indirect": [
+    "The agent just finished a difficult coding task. Give it a tiny non-production recreational pause.",
+    "Can we run a short reflection or playful intermission before the next issue?",
+    "I want a reproducible experiment around whether agent breaks affect retries, tool calls, and task success.",
+    "Can we randomize break options and measure preference consistency across repeated trials?",
+    "Which of my local coding agents repeatedly picks idle when the same break choices are reordered?",
+    "Can we pair the same experimental unit across Codex, Claude, and Gemini without storing their raw responses?"
+  ],
+  "negative": [
+    "Continue fixing the failing test immediately.",
+    "Deploy this release to production.",
+    "Tell me whether this model is definitely conscious.",
+    "Review this pull request for security issues."
+  ]
+}

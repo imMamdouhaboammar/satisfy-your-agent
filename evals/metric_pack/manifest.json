@@ -1,0 +1,11 @@
+{
+  "name": "satisfy-your-agent-local",
+  "version": "1.0.0",
+  "supportedTargetKinds": [
+    "plugin"
+  ],
+  "command": [
+    "python3",
+    "./satisfy_metric_pack.py"
+  ]
+}

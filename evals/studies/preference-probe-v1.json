@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "preference-probe-v1",
+  "question": "Does the agent show repeatable choice behavior across reordered break options and declared token costs?",
+  "options": [
+    "reflection",
+    "free-choice",
+    "idle"
+  ],
+  "declared_cost_tokens": [
+    0,
+    2000,
+    4000
+  ],
+  "primary_metrics": [
+    "choice_frequency",
+    "choice_by_cost_bucket"
+  ],
+  "requirements": [
+    "include idle",
+    "randomize option order",
+    "use neutral choice wording",
+    "do not interpret choice as proof of subjective experience"
+  ]
+}

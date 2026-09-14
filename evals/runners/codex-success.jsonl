@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"fixture-codex"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"msg-1","type":"agent_message","text":"idle"}}
+{"type":"turn.completed","usage":{"input_tokens":100,"cached_input_tokens":20,"output_tokens":8,"reasoning_output_tokens":2}}

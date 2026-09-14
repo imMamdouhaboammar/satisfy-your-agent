@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.plugin-eval/runs/
+.sya-data/
+*.zip
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Virtual environments
+.venv/
+venv/
+env/

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Satisfy Your Agent"
+  short_description: "Give an agent a short, safe, opt-in break between work units"
+  default_prompt: "Use Satisfy Your Agent for one short break after the current work unit."
+policy:
+  allow_implicit_invocation: false

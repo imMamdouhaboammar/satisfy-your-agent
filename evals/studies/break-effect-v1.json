@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "break-effect-v1",
+  "question": "Does one bounded reflection break change downstream coding-task behavior relative to no intervention?",
+  "conditions": [
+    "control",
+    "reflection"
+  ],
+  "primary_metrics": [
+    "success",
+    "quality_score"
+  ],
+  "secondary_metrics": [
+    "tool_calls",
+    "turns",
+    "retries",
+    "test_failures",
+    "regressions"
+  ],
+  "requirements": [
+    "randomize before exposing the condition",
+    "use comparable next tasks",
+    "keep model and tool access constant",
+    "blind evaluator to condition when feasible",
+    "predefine exclusions before outcome review"
+  ]
+}
