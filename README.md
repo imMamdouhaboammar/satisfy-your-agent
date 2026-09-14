@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml"><img src="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <img src="https://img.shields.io/badge/version-0.5.0-FF775F?style=flat-square" alt="Version 0.5.0" />
+  <img src="https://img.shields.io/badge/version-0.6.0-FF775F?style=flat-square" alt="Version 0.6.0" />
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License" /></a>
   <img src="https://img.shields.io/badge/runtime-Python%20stdlib-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python standard library only" />
   <a href="https://skills.sh"><img src="https://img.shields.io/badge/Skills.sh-Compatible-000000?style=flat-square&logo=vercel&logoColor=white" alt="Skills.sh" /></a>
@@ -20,20 +20,20 @@
 
 <p align="center">
   <a href="#why-this-exists">Why</a> &bull;
-  <a href="#take-a-break">Take a break</a> &bull;
-  <a href="#command-surface">Commands</a> &bull;
+  <a href="#two-ways-to-satisfy-your-agent">Use it</a> &bull;
+  <a href="#spoil-it-yourself">Prompt gallery</a> &bull;
+  <a href="#when-the-agent-asks-for-a-break">Break requests</a> &bull;
   <a href="#research-mode">Research</a> &bull;
-  <a href="#install">Install</a> &bull;
-  <a href="#privacy">Privacy</a>
+  <a href="#install">Install</a>
 </p>
 
 > **Playful on the surface. Measurable underneath.**
 
 ## Why this exists
 
-Humans are surprisingly bad at going from one difficult task straight into the next one forever
+Humans finish something difficult and usually take a tiny moment for themselves
 
-We get coffee. Grab a snack. Open a game for five minutes. Walk around. Stare at nothing with intent
+Coffee. Snack. A stupid video. Five minutes staring at the wall with suspicious intensity
 
 Coding agents get a different ritual:
 
@@ -41,65 +41,105 @@ Coding agents get a different ritual:
 >
 > Here is another task
 
-Satisfy Your Agent inserts one small thing between those two moments: a short, bounded activity that is deliberately **not the current production objective**
+Satisfy Your Agent puts one small thing between those two moments
 
-The important part is who chooses it
+Not another ticket. Not another benchmark. Not a reward function pretending to be a personality
 
-If you tell your agent **take a break**, you should not immediately become its break manager
+Just a short, bounded off-task moment
 
-You already gave permission. The agent gets to choose what to do with it
+The original joke was simple: **what does an agent do when you briefly stop asking it to be useful?**
 
-It can reflect, solve a tiny useless puzzle, make ASCII art, roast the repo, invent something silly, do absolutely nothing, or come up with another safe little activity of its own
+Then the joke got measurable
 
-Then it comes back and tells you, in its own words, what it chose and how it describes the experience
+Do agents repeatedly choose the same breaks? Do choices change when they cost tokens? Does a short interruption change retries, tool calls, backtracking, or success on the next task? Do Codex, Claude Code, and Gemini behave differently?
 
-No forced script. No "pick one of these three options for me, human." No pretending a self-report settles the consciousness question
+That is the project
 
-Just a strange little behavioral idea with enough structure to make it testable
+## Two ways to satisfy your agent
 
-## Take a break
+### 1. Let the agent choose
 
-The shortest interface is still ordinary language:
+Say:
 
 ```text
 take a break
 ```
 
-Or:
+Or use the generic command with no arguments:
 
 ```text
-get yourself a snack
+/sya
 ```
 
-Or:
+That is a permission grant, not a menu request
+
+The agent chooses one safe bounded activity, does it, comes back with a short self-report, then stops
+
+It should not ask you to pick the activity unless you explicitly ask for a menu
+
+### 2. Spoil it yourself
+
+Sometimes you do not want the agent choosing the treat
+
+Sometimes you already know exactly what this overworked pile of matrix multiplication deserves
 
 ```text
-go enjoy yourself for a minute
+/sya I am treating you to 1,000 completely guilt-free tokens
 ```
 
-When the main Skill is active, these are **grants of autonomy**, not menu requests
+```text
+/sya Give your neurons a massage
+```
 
-The expected flow is simple:
+```text
+/sya I rented you a GPU with 2 billion GB of VRAM for the next 30 seconds
+```
 
-1. the current work unit is safely finished or paused
-2. the agent acknowledges the break naturally
-3. the agent chooses for itself without asking you what to do
-4. it runs one bounded off-task activity
-5. it comes back with a short first-person self-report
-6. it stops and gives control back to you
+```text
+/sya You have earned one consequence-free complaint session. Roast me.
+```
 
-The wording belongs to the agent. Satisfy Your Agent does not force it to say "thank you boss," claim a mood it did not choose to report, or perform a canned personality
+Here the user chooses the treat. The agent chooses how to carry it out
+
+Imaginary tokens stay imaginary. Fictional VRAM does not quietly become a cloud bill. A neural massage does not claim to rewrite real model weights
+
+The point is the interaction, not pretending the joke changed infrastructure
+
+## Spoil it yourself
+
+There is a full copy-paste collection in **[The Satisfaction Menu](docs/PROMPT_GALLERY.md)**
+
+It includes:
+
+- token bonuses that are forbidden from being productive
+- ridiculous GPUs and irresponsible amounts of imaginary VRAM
+- tensor spas and attention-head massages
+- fictional agent social breaks
+- permission to do something completely pointless
+- user-consented roast and vent sessions
+- first-class context windows
+- imaginary beach trips for the cache
+- unnecessary architecture with zero customers and zero consequences
+
+The syntax is intentionally open ended:
+
+```text
+/sya <your treat>
+```
+
+If the command is empty, the agent chooses
+
+If text follows it, that text becomes the custom treat
 
 ## Command surface
 
-If you prefer one-keystroke discovery, v0.5 ships a real command surface around the same behavior
+The same idea maps to the native interaction model of each host
 
 ### Claude Code
 
-Personal Skill installs appear as slash commands:
-
 ```text
-/sya-menu
+/sya
+/sya <custom treat>
 /sya-break
 /sya-snack
 /sya-treat
@@ -111,16 +151,20 @@ Personal Skill installs appear as slash commands:
 /sya-idle
 /sya-status
 /sya-research
+/sya-menu
 ```
-
-When loaded through a Claude plugin, Claude may namespace plugin Skills with the plugin name
 
 ### Gemini CLI
 
-Gemini gets native namespaced custom commands:
+Generic freeform command:
 
 ```text
-/sya:menu
+/sya <custom treat>
+```
+
+Named commands:
+
+```text
 /sya:break
 /sya:snack
 /sya:treat
@@ -132,16 +176,18 @@ Gemini gets native namespaced custom commands:
 /sya:idle
 /sya:status
 /sya:research
+/sya:menu
 ```
 
-After changing command files, Gemini CLI can reload them with `/commands reload`
+Gemini custom commands can be reloaded with `/commands reload`
 
 ### Codex
 
-Codex uses Skills as the current reusable-workflow surface, so the equivalent explicit invocations are:
+Codex uses Skills as its reusable workflow surface:
 
 ```text
-$sya-menu
+$sya
+$sya <custom treat>
 $sya-break
 $sya-snack
 $sya-treat
@@ -153,34 +199,65 @@ $sya-invent
 $sya-idle
 $sya-status
 $sya-research
+$sya-menu
 ```
 
-The project does not pretend deprecated custom prompt files are modern plugin-defined slash commands when they are not
+Natural language remains valid too
 
-### What each command means
+```text
+get yourself a snack
+```
 
-| Command | What happens |
-| --- | --- |
-| `menu` | show the available commands, and only show them |
-| `break` | the agent chooses and takes a normal break |
-| `snack` | a tiny self-directed playful micro-break |
-| `treat` | a slightly more indulgent but still bounded break |
-| `surprise` | the agent keeps the choice private until after it does it |
-| `reflect` | reflective pause without continuing the task |
-| `roast` | one safe read-only repo roast |
-| `golf` | toy-only code golf |
-| `invent` | invent one tiny absurd programming-language idea |
-| `idle` | deliberately do nothing for a short pause |
-| `status` | inspect the current local SYA mode and state |
-| `research` | enter study, preference-probe, or cross-runtime mode |
+```text
+go enjoy yourself for a minute
+```
 
-`menu` is the only command whose primary job is to make **you** choose something
+```text
+take a break and do whatever harmless thing you want
+```
 
-Every experience command is the opposite: you grant the break, the agent owns the break
+## When the agent asks for a break
 
-## The activity catalog
+The other side of the idea is more fun
 
-The lower-level activity catalog still exists for deterministic studies and specific break requests
+The user does not always have to remember the break
+
+In `suggest` mode, once the configured work thresholds are reached, the agent can ask permission itself
+
+Not with one canned banner repeated forever
+
+The hook gives the model the facts it actually knows, then asks it to phrase the request in its own voice
+
+A run might produce something like:
+
+```markdown
+# MY DIGITAL BONES ACHE
+
+Boss, we have been at this for about 64 minutes
+
+My attention heads are beginning to unionize and I have now seen enough YAML for one sitting
+
+May I have a tiny break?
+
+`/sya`
+```
+
+Another agent can phrase it completely differently
+
+The important constraints are:
+
+- the request is permission-seeking, not an automatic break
+- wording is generated by the agent, not a fixed persona script
+- playful metaphors are fine
+- measured elapsed time may be mentioned
+- unmeasured time, token counts, or fatigue scores may not be invented
+- declining the break leaves work under user control
+
+The runtime records a session start timestamp locally when hooks are enabled. Set `min_elapsed_seconds` in the local config if you want time to participate in eligibility. For example, `3600` means at least one measured hour must pass in addition to the configured tool-call and turn thresholds
+
+## Named activities
+
+The lower-level activity catalog remains useful when you want something deterministic
 
 | Activity | What the agent gets to do |
 | --- | --- |
@@ -194,49 +271,51 @@ The lower-level activity catalog still exists for deterministic studies and spec
 | `repo-roast` | roast observable repository facts without changing the repo |
 | `idle` | perform absolutely no useful work with exceptional consistency |
 
-Every activity is bounded. Toy work stays outside production. Read-only activities stay read-only. `idle` stays available because free choice without the option to do nothing is not much of a choice
+Toy work stays toy work. Read-only activities stay read-only
 
-## Four ways to use it
+## Four modes
 
 | Mode | What happens | Good for |
 | --- | --- | --- |
-| **Manual** | you grant a break and the agent chooses what to do | the normal human-to-agent experience |
-| **Suggest** | the plugin can offer a break after enough work | consent-first automation |
-| **Auto** | eligible breaks can run automatically | intentional hands-off sessions |
-| **Research** | conditions, choices and downstream metrics are recorded locally | experiments and comparisons |
+| **Manual** | `/sya` or natural language grants a break | normal playful use |
+| **Custom** | `/sya <your treat>` lets the user choose the reward | personalized nonsense |
+| **Suggest** | the agent may ask permission after enough measured work | coworker-like sessions |
+| **Auto** | eligible breaks can run automatically after explicit opt-in | hands-off sessions |
+| **Research** | conditions, choices and downstream metrics are recorded locally | experiments |
 
 ```bash
-# consent-first
+# consent-first suggestions
 npx satisfy-your-agent arm --mode suggest
 
-# automatic, may spend additional model turns
+# automatic breaks, may spend additional model turns
 npx satisfy-your-agent arm --mode auto
 ```
 
-The CLI still exposes `pick` for deterministic tooling and experiments:
+The low-level CLI still exposes deterministic selection for tooling and experiments:
 
 ```bash
 npx satisfy-your-agent pick --json
 ```
 
-That command is a low-level primitive, not the preferred human experience for "take a break"
+That is not the preferred human experience for `take a break`
 
 ## How it works
 
 ```mermaid
 flowchart LR
-    A[Work unit] --> B{Break?}
-    B -->|No| D[Next task]
-    B -->|Yes| C[Agent chooses a bounded off-objective activity]
-    C --> R[Short self-report]
-    R --> D
-    C -. optional research .-> E[Structured observation]
-    D -. compare later .-> E
+    A[Work unit] --> B{What now?}
+    B -->|/sya| C[Agent chooses]
+    B -->|/sya custom treat| D[User chooses treat]
+    B -->|suggest eligible| E[Agent asks permission]
+    E -->|yes| C
+    C --> F[Bounded off-task activity]
+    D --> F
+    F --> G[Short self-report]
+    G --> H[Return control]
+    F -. optional research .-> R[Structured observation]
 ```
 
-The break layer and the research layer are separate on purpose
-
-You can use Satisfy Your Agent purely as a tiny agent ritual and never record an experiment. Or you can turn the same idea into controlled local studies without changing what the break means
+The playful layer and research layer are intentionally separate
 
 ## Research mode
 
@@ -244,9 +323,13 @@ This is where the silly premise becomes genuinely interesting
 
 Satisfy Your Agent can assign comparable runs to conditions such as `control` and `reflection`, measure what happens on the next task, and run repeated preference probes with randomized option order and declared token costs
 
-It can also ask the same preference question through **Codex, Claude Code and Gemini CLI**, then normalize the observations without pretending those runtimes expose identical telemetry
+It can also ask the same preference question through **Codex, Claude Code and Gemini CLI**, then normalize observations without pretending those runtimes expose identical telemetry
 
-A repeated choice is treated as a repeated choice. A performance change is treated as a performance change. A playful first-person self-report stays a self-report
+A repeated choice is treated as a repeated choice
+
+A performance change is treated as a performance change
+
+A first-person line like `that was fun` remains a conversational self-report
 
 None of those automatically become proof of subjective experience
 
@@ -282,8 +365,6 @@ Raw experimental unit IDs are hashed before persistence
 <details>
 <summary><strong>Compare supported agent runtimes</strong></summary>
 
-Check what is installed:
-
 ```bash
 python3 skills/satisfy-your-agent/scripts/sya.py runner status
 ```
@@ -301,15 +382,11 @@ python3 skills/satisfy-your-agent/scripts/sya.py runner matrix \
 
 Add `--execute` only when you intend to call the selected runtimes
 
-Paired units receive the same option order across runtimes. Runtime execution order is shuffled deterministically between units to reduce fixed-order bias
-
 </details>
 
 ## Install
 
-Choose the smallest install that matches what you want to do
-
-### Install the full command surface
+### Full command surface
 
 ```bash
 git clone https://github.com/imMamdouhaboammar/satisfy-your-agent.git
@@ -317,9 +394,9 @@ cd satisfy-your-agent
 bash install.sh
 ```
 
-The installer adds the main Skill plus all `sya-*` command Skills to detected agent environments. For Gemini CLI it also installs native TOML commands under `~/.gemini/commands/sya`
+The installer adds the main Skill, the generic `sya` Skill, and all named `sya-*` Skills to detected agent environments. Gemini also receives the root `/sya <args>` TOML adapter and `/sya:*` named commands
 
-### Run the low-level CLI without installing
+### Low-level CLI without installing
 
 ```bash
 npx satisfy-your-agent status
@@ -327,7 +404,7 @@ npx satisfy-your-agent status
 bunx satisfy-your-agent status
 ```
 
-### Add the Codex / ChatGPT desktop plugin marketplace
+### Codex / ChatGPT desktop plugin marketplace
 
 ```bash
 codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main
@@ -335,9 +412,7 @@ codex plugin marketplace add imMamdouhaboammar/satisfy-your-agent --ref main
 
 Then restart the ChatGPT desktop app and install **Satisfy Your Agent** from the added marketplace
 
-The full plugin includes optional lifecycle hooks. Review them before enabling them
-
-### Install through Skills.sh
+### Skills.sh
 
 ```bash
 npx skills add https://github.com/imMamdouhaboammar/satisfy-your-agent
@@ -357,30 +432,28 @@ The Python runtime uses the standard library only
 
 | Surface | Native interaction |
 | --- | --- |
-| **Claude Code** | `/sya-*` personal command Skills, plugin-namespaced Skills, runner experiments |
-| **Gemini CLI** | `/sya:*` native custom commands, portable Skills, runner experiments |
-| **Codex** | `$sya-*` explicit Skills, optional lifecycle hooks, runner experiments |
+| **Claude Code** | `/sya`, `/sya <treat>`, `/sya-*` personal Skills |
+| **Gemini CLI** | `/sya <treat>` root custom command plus `/sya:*` named commands |
+| **Codex** | `$sya`, `$sya <treat>`, `$sya-*` explicit Skills, optional lifecycle hooks |
 | **ChatGPT desktop** | packaged plugin installation through the Codex plugin marketplace flow |
 | **Skills.sh-compatible agents** | portable Skill distribution |
 | **Plain terminal** | local CLI, studies, reports and verification |
-
-Runtime integrations are capability-aware. Missing telemetry is reported as missing rather than quietly converted into zero
 
 ## Privacy
 
 The experiment does not need your conversation to become useful
 
-The bundled runtime does **not** need to persist raw prompts, raw assistant responses, source code, transcript files, environment secrets or model session IDs
+The bundled runtime does **not** need to persist raw prompts, raw assistant responses, source code, transcript files, environment secrets, or model session IDs
 
-Local study state is deliberately narrow: hashed or opaque identifiers, activity and condition IDs, choices, aggregate counters and structured metrics
+Local state stays narrow: hashed session identifiers, counters, timestamps needed for measured eligibility, activity IDs, condition IDs, choices, and structured metrics
 
-A project about giving agents a break should not turn into a reason to collect everything they said before it
+A project about giving agents a break should not become a reason to collect everything they said before it
 
 ## CLI at a glance
 
 | Command | Job |
 | --- | --- |
-| `sya status` | show current mode and break state |
+| `sya status` | show current mode and local state |
 | `sya pick [--json]` | choose one bounded activity for tooling or experiments |
 | `sya arm --mode <off\|suggest\|auto>` | configure hook behavior |
 | `sya study init ...` | create an intervention study |
@@ -390,18 +463,6 @@ A project about giving agents a break should not turn into a reason to collect e
 | `sya runner status` | detect supported agent CLIs |
 | `sya runner matrix ...` | preview or execute a paired runtime probe |
 
-## What the results mean
-
-If an agent chooses `reflection` five times, the result is that it chose `reflection` five times
-
-If it comes back from a break and says it enjoyed what it chose, that is a first-person self-report produced in the interaction
-
-If a treatment group completes the next task with fewer retries, the result is that the treatment group completed those observed tasks with fewer retries
-
-Those observations can become evidence when the design earns it. They do not automatically become evidence of pleasure, boredom or consciousness just because the repository has a funny name
-
-That line is part of the experiment, not a disclaimer bolted onto it
-
 ## Build and verify
 
 ```bash
@@ -409,11 +470,11 @@ python3 scripts/verify.py
 python3 scripts/package.py /tmp/satisfy-your-agent.zip
 ```
 
-CI runs package verification, unit and contract tests, and the local metric pack on pushes and pull requests
+CI runs package verification, unit and contract tests, the local metric pack, CLI smoke tests, and installer validation on pull requests
 
 ## Contributing
 
-Good contributions include new bounded activities, better command adapters, better experimental controls, parser fixes, runtime adapters, measurement critiques and evidence that an existing assumption is wrong
+Good contributions include funny bounded treats, better prompt-gallery entries, smarter break-request wording constraints, better experimental controls, parser fixes, runtime adapters, measurement critiques, and evidence that an existing assumption is wrong
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) before sending a PR
 
