@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,7 +14,7 @@ SECRET_PATTERNS = [
     re.compile(r"gh[opusr]_[A-Za-z0-9]{20,}"),
     re.compile(r"AKIA[0-9A-Z]{16}"),
 ]
-TEXT_SUFFIXES = {".md", ".py", ".json", ".yaml", ".yml", ".txt"}
+TEXT_SUFFIXES = {".md", ".py", ".json", ".yaml", ".yml", ".txt", ".toml"}
 
 
 def fail(message: str) -> None:
@@ -46,6 +47,10 @@ def main() -> int:
 
     for path in ROOT.rglob("*.json"):
         json.loads(path.read_text(encoding="utf-8"))
+
+    for path in ROOT.rglob("*.toml"):
+        with path.open("rb") as handle:
+            tomllib.load(handle)
 
     skill = ROOT / "skills" / "satisfy-your-agent" / "SKILL.md"
     text = skill.read_text(encoding="utf-8")
