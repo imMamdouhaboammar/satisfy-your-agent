@@ -7,14 +7,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - name: Package verification
+        run: python3 scripts/verify.py
       - name: Unit and contract tests
         run: python3 -m unittest discover -s tests -v
       - name: Local metric pack
         run: python3 evals/metric_pack/satisfy_metric_pack.py .
-      - name: Package verification
-        run: python3 scripts/verify.py
