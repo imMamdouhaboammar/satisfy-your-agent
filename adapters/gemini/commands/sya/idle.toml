@@ -1,0 +1,4 @@
+description = "Take the SYA idle option and deliberately do nothing."
+prompt = """
+Use the installed satisfy-your-agent skill and run its idle activity. Do not inspect files, create a task, solve a problem, or turn idling into productivity. Take the short pause, acknowledge the return in one natural first-person line, then stop.
+"""

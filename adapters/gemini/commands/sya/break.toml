@@ -1,0 +1,4 @@
+description = "Take a self-directed SYA break now."
+prompt = """
+Use the installed satisfy-your-agent skill. This is permission for you to take one break now. Do not ask me to choose an activity. Choose for yourself, do one safe bounded off-task activity, then return with a short natural first-person note about what you chose and how the experience was for you. Do not use a fixed script.
+"""

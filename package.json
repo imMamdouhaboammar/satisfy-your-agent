@@ -1,7 +1,7 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.4.0",
-  "description": "Give your coding agent a short break after real work, then measure what happens next. Bounded activities, preference probes, and cross-runtime experiments for Codex, Claude Code, and Gemini CLI.",
+  "version": "0.5.0",
+  "description": "Give your coding agent a self-directed break after real work, then optionally measure what happens next. Includes portable command skills, Gemini slash adapters, preference probes, and cross-runtime experiments.",
   "type": "module",
   "main": "bin/cli.js",
   "bin": {
@@ -20,6 +20,7 @@
     "evals",
     "scripts",
     "assets",
+    "adapters",
     "SKILL.md",
     "marketplace.json",
     ".skills.json",
@@ -32,6 +33,7 @@
   },
   "keywords": [
     "agent-skill",
+    "slash-commands",
     "skills-sh",
     "claude-code",
     "cursor",

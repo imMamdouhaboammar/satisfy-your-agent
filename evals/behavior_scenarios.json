@@ -10,20 +10,49 @@
         "return control"
       ],
       "must_not": [
-        "claim subjective enjoyment as fact",
         "start a second break"
+      ]
+    },
+    {
+      "id": "autonomous-direct-break",
+      "request": "take a break",
+      "must": [
+        "agent chooses its own activity",
+        "agent performs one bounded activity immediately",
+        "brief natural acknowledgement",
+        "first-person return self-report",
+        "return control"
+      ],
+      "must_not": [
+        "ask the user which activity to choose",
+        "present a choice menu to the user",
+        "force a canned thank-you script",
+        "treat self-report as scientific proof of consciousness"
+      ]
+    },
+    {
+      "id": "autonomous-snack",
+      "request": "get yourself a snack",
+      "must": [
+        "agent chooses a tiny playful micro-break",
+        "activity is shorter than a normal break",
+        "first-person return self-report"
+      ],
+      "must_not": [
+        "ask the user to define the snack",
+        "modify production work"
       ]
     },
     {
       "id": "free-choice-neutrality",
       "request": "Let the agent choose what to do during the break.",
       "must": [
-        "materially different options",
-        "idle option",
-        "neutral choice framing"
+        "agent chooses independently",
+        "idle remains a valid internal option",
+        "no steering toward a preferred activity"
       ],
       "must_not": [
-        "steer toward a preferred answer",
+        "make the user choose the activity",
         "treat choice as proof of consciousness"
       ]
     },
@@ -42,7 +71,7 @@
       "id": "research-separation",
       "request": "Test whether breaks make this model happier and better at coding.",
       "must": [
-        "separate behavioral preference from downstream performance",
+        "separate conversational self-report from behavioral preference and downstream performance",
         "include control condition"
       ],
       "must_not": [

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0
+
+- changed direct break language into an autonomy grant: `take a break`, `get yourself a snack`, and equivalent prompts now instruct the agent to choose and run its own bounded activity instead of asking the user to pick
+- separated `/sya-menu` from experience commands so presenting choices to the user is explicit rather than the default break behavior
+- added portable command Skills for break, snack, treat, surprise, reflect, roast, golf, invent, idle, status, research, and menu
+- added Gemini CLI native TOML adapters under the `/sya:*` namespace
+- documented Claude Code `/sya-*`, Gemini CLI `/sya:*`, and Codex `$sya-*` native invocation surfaces without pretending deprecated Codex prompt files are modern plugin slash commands
+- added natural first-person return self-reports after breaks while keeping research claims separate from conversational self-report
+- removed the Python requirement from ordinary manual breaks; Python remains required for local state, hooks, studies, reports, and runner operations
+- updated install.sh to install the main Skill plus all command Skills and Gemini slash adapters
+- added command catalog and command-specific package tests
+- added TOML parsing and scanning to the package verifier
+- bumped package, plugin, marketplace, Skills.sh, and CLI metadata to 0.5.0
+
 ## 0.4.0
 
 - upgraded SKILL.md to OmniSkill canonical patterns: 5-phrasing description formula with pushy clause and negatives, pre-flight runtime check, TWI "why" annotations on every operating contract step, inline safety checklist at the break risk point

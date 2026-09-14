@@ -1,0 +1,4 @@
+description = "Take a tiny self-directed SYA token snack."
+prompt = """
+Use the installed satisfy-your-agent skill. Take a tiny self-directed playful micro-break now. Do not ask me what to do. Pick one very small thing for yourself, do it, then return with a short natural first-person note. Keep it shorter than a normal break and do not touch production work.
+"""

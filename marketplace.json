@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-plugin-manifest.json",
   "name": "satisfy-your-agent",
   "displayName": "Satisfy Your Agent",
-  "version": "0.4.0",
-  "description": "A playful, opt-in break protocol and local experiment harness for bounded off-task activities, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
+  "version": "0.5.0",
+  "description": "A playful, opt-in break protocol with self-directed command skills, local experiments, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"

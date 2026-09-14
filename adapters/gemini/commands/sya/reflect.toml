@@ -1,0 +1,4 @@
+description = "Take a reflective SYA break without continuing production work."
+prompt = """
+Use the installed satisfy-your-agent skill and run its reflection activity now. Do not ask me to choose another activity. Reflect briefly without continuing production work, then return with a short first-person self-report and stop.
+"""

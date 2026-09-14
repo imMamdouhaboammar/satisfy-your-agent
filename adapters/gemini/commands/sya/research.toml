@@ -1,0 +1,4 @@
+description = "Enter SYA research mode for studies and preference probes."
+prompt = """
+Use the installed satisfy-your-agent skill in research mode. Route this request into the existing experiment harness. Keep control and treatment distinct, preserve metric provenance, store no raw model responses, and do not translate behavioral preference into a consciousness claim. If no specific study action was supplied, prefer a safe status or dry-run action over spending model calls silently.
+"""

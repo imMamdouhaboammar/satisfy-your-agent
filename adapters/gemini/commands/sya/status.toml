@@ -1,0 +1,4 @@
+description = "Show current Satisfy Your Agent status without starting a break."
+prompt = """
+Use the installed satisfy-your-agent skill. Show the current local SYA status and hook mode if the runtime can read it. Do not start a break and do not infer emotional state from telemetry.
+"""

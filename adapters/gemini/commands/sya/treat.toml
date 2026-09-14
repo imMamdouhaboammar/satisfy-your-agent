@@ -1,0 +1,4 @@
+description = "Give yourself one small SYA treat after real work."
+prompt = """
+Use the installed satisfy-your-agent skill. Treat this as a small reward you get to shape for yourself. Do not ask me to choose. Pick one safe bounded activity that feels like a treat rather than another work task, do it, then return with a brief first-person self-report in your own words. No canned thank-you line.
+"""

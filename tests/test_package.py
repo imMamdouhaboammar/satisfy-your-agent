@@ -29,7 +29,7 @@ class PackageTests(unittest.TestCase):
     def test_no_em_dash_character_in_package_text(self):
         bad = []
         for path in ROOT.rglob("*"):
-            if path.is_file() and path.suffix in {".md", ".py", ".json", ".yaml", ".yml"}:
+            if path.is_file() and path.suffix in {".md", ".py", ".json", ".yaml", ".yml", ".toml"}:
                 if chr(0x2014) in path.read_text(encoding="utf-8"):
                     bad.append(str(path.relative_to(ROOT)))
         self.assertEqual(bad, [])
@@ -82,7 +82,7 @@ class V02PackageTests(unittest.TestCase):
 
 
 class V03PackageTests(unittest.TestCase):
-    def test_manifest_version_is_0_3_0(self):
+    def test_manifest_keeps_v03_contract_or_later(self):
         manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
         version = tuple(int(part) for part in manifest["version"].split("."))
         self.assertGreaterEqual(version, (0, 3, 0))
@@ -135,9 +135,10 @@ class BrandingAndDistributionTests(unittest.TestCase):
 
 
 class V04DistributionTests(unittest.TestCase):
-    def test_manifest_version_is_0_4_0(self):
+    def test_manifest_keeps_v04_contract_or_later(self):
         manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], "0.4.0")
+        version = tuple(int(part) for part in manifest["version"].split("."))
+        self.assertGreaterEqual(version, (0, 4, 0))
         self.assertIn("homepage", manifest)
 
     def test_package_json_has_bin_entry(self):
@@ -179,15 +180,17 @@ class V04DistributionTests(unittest.TestCase):
         content = cli.read_text(encoding="utf-8")
         self.assertIn("sya.py", content)
 
-    def test_skill_description_has_pushy_clause_and_negatives(self):
-        text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("even if they don't explicitly say", text.lower().replace("\u2019", "'"))
-        self.assertIn("do not use for", text.lower())
+    def test_skill_description_has_discovery_clause_and_negatives(self):
+        raw = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8").lower()
+        text = " ".join(raw.split())
+        self.assertIn("even if they do not explicitly say", text)
+        self.assertIn("do not use for", text)
 
-    def test_skill_has_preflight_section(self):
-        text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("pre-flight", text.lower())
-        self.assertIn("python3", text.lower())
+    def test_runtime_requirements_keep_manual_break_lightweight(self):
+        text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8").lower()
+        self.assertIn("runtime requirements", text)
+        self.assertIn("manual experience commands do not require python", text)
+        self.assertIn("python3", text)
 
     def test_contributing_and_security_exist(self):
         self.assertTrue((ROOT / "CONTRIBUTING.md").exists())
@@ -196,6 +199,29 @@ class V04DistributionTests(unittest.TestCase):
         self.assertIn("verify.py", contributing)
         security = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
         self.assertIn("install.sh", security)
+
+
+class V05CommandSurfaceTests(unittest.TestCase):
+    def test_release_version_is_0_5_0_everywhere(self):
+        manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / ".skills.json").read_text(encoding="utf-8"))
+        marketplace = json.loads((ROOT / "marketplace.json").read_text(encoding="utf-8"))
+        self.assertEqual({manifest["version"], pkg["version"], skills["version"], marketplace["version"]}, {"0.5.0"})
+
+    def test_npm_package_includes_command_adapters(self):
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        self.assertIn("adapters", pkg["files"])
+        self.assertIn("slash-commands", pkg["keywords"])
+
+    def test_commands_reference_is_packaged(self):
+        self.assertTrue((ROOT / "skills" / "satisfy-your-agent" / "references" / "commands.md").exists())
+        self.assertTrue((ROOT / "config" / "commands.json").exists())
+
+    def test_gemini_command_adapter_directory_is_packaged(self):
+        command_dir = ROOT / "adapters" / "gemini" / "commands" / "sya"
+        self.assertTrue(command_dir.is_dir())
+        self.assertGreaterEqual(len(list(command_dir.glob("*.toml"))), 12)
 
 
 if __name__ == "__main__":
