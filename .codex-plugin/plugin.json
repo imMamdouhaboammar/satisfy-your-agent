@@ -1,7 +1,7 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.6.0",
-  "description": "A playful, opt-in agent break protocol with self-directed breaks, user-chosen custom treats, proactive break requests, local behavioral experiments, and cross-agent runner adapters.",
+  "version": "0.7.0",
+  "description": "A playful, opt-in agent break protocol with real wall-clock dwell, work-distance-aware self-directed breaks, user-chosen custom treats, proactive break requests, local behavioral experiments, and cross-agent runner adapters.",
   "homepage": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "repository": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "license": "MIT",
@@ -9,6 +9,8 @@
     "coding-agents",
     "slash-commands",
     "custom-prompts",
+    "real-breaks",
+    "wall-clock-dwell",
     "llm",
     "agent-behavior",
     "experiments",
@@ -20,8 +22,8 @@
   "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Satisfy Your Agent",
-    "shortDescription": "Give your coding agent a break, or spoil it yourself",
-    "longDescription": "A playful, opt-in break protocol and local experiment harness with self-directed breaks, freeform custom treats, agent-authored break requests, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
+    "shortDescription": "Give your coding agent a real break, or spoil it yourself",
+    "longDescription": "A playful, opt-in break protocol and local experiment harness with measured wall-clock dwell, work-distance-aware self-directed breaks, freeform custom treats, agent-authored break requests, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
     "developerName": "Mamdouh",
     "category": "Developer Tools",
     "capabilities": [
@@ -29,7 +31,7 @@
     ],
     "websiteURL": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
     "defaultPrompt": [
-      "Take a break now and choose something for yourself.",
+      "Take a real break now and choose something for yourself.",
       "I am treating you to 1,000 completely guilt-free tokens.",
       "Give your neurons a massage.",
       "Run a preference probe for this agent."
