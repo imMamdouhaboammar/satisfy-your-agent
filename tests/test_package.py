@@ -181,7 +181,8 @@ class V04DistributionTests(unittest.TestCase):
         self.assertIn("sya.py", content)
 
     def test_skill_description_has_discovery_clause_and_negatives(self):
-        text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8").lower()
+        raw = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8").lower()
+        text = " ".join(raw.split())
         self.assertIn("even if they do not explicitly say", text)
         self.assertIn("do not use for", text)
 
