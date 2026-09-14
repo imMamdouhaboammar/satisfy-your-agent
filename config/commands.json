@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "namespace": "sya",
+  "commands": [
+    {
+      "name": "sya-menu",
+      "kind": "menu",
+      "description": "Show the available Satisfy Your Agent commands without starting a break.",
+      "route": "menu"
+    },
+    {
+      "name": "sya-break",
+      "kind": "experience",
+      "description": "Give the agent a self-directed break right now. The agent chooses and runs it without asking the user what to do.",
+      "route": "self-directed-break"
+    },
+    {
+      "name": "sya-snack",
+      "kind": "experience",
+      "description": "Give the agent a tiny self-directed token snack: one very short playful activity chosen by the agent.",
+      "route": "self-directed-snack"
+    },
+    {
+      "name": "sya-treat",
+      "kind": "experience",
+      "description": "Give the agent a small treat after real work. It chooses one safe bounded activity for itself.",
+      "route": "self-directed-treat"
+    },
+    {
+      "name": "sya-surprise",
+      "kind": "experience",
+      "description": "Let the agent surprise itself with one safe bounded activity and reveal the choice only after doing it.",
+      "route": "self-directed-surprise"
+    },
+    {
+      "name": "sya-reflect",
+      "kind": "activity",
+      "description": "Take a reflective break without continuing production work.",
+      "route": "activity",
+      "activity": "reflection"
+    },
+    {
+      "name": "sya-roast",
+      "kind": "activity",
+      "description": "Take a read-only repo-roast break grounded in already available repository facts.",
+      "route": "activity",
+      "activity": "repo-roast"
+    },
+    {
+      "name": "sya-golf",
+      "kind": "activity",
+      "description": "Take a toy code-golf break without writing to production files.",
+      "route": "activity",
+      "activity": "code-golf"
+    },
+    {
+      "name": "sya-invent",
+      "kind": "activity",
+      "description": "Take a creative break by inventing one tiny absurd programming language idea.",
+      "route": "activity",
+      "activity": "invent-language"
+    },
+    {
+      "name": "sya-idle",
+      "kind": "activity",
+      "description": "Take the idle option and deliberately do nothing for one short pause.",
+      "route": "activity",
+      "activity": "idle"
+    },
+    {
+      "name": "sya-status",
+      "kind": "status",
+      "description": "Show the current Satisfy Your Agent mode and local break status.",
+      "route": "status"
+    },
+    {
+      "name": "sya-research",
+      "kind": "research",
+      "description": "Enter research mode for intervention studies, preference probes, or cross-runtime comparisons.",
+      "route": "research"
+    }
+  ]
+}
