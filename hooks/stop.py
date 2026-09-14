@@ -65,7 +65,13 @@ def main() -> int:
                 recent_activity_ids=list(state.get("recent_activities") or []),
             )
             core.mark_break_start(session_id, state, activity["id"])
-            emit({"decision": "block", "reason": core.break_prompt(activity)})
+            dwell_instruction = (
+                " When local tool execution and Python are available, use the bundled sya_dwell.py helper for "
+                "one measured 15 to 30 second wall-clock pause before or around the activity. If the helper cannot "
+                "run, keep the break untimed. Never replace a missing wait with fictional timestamps or claim "
+                "continuous hidden thought during the idle interval."
+            )
+            emit({"decision": "block", "reason": core.break_prompt(activity) + dwell_instruction})
             return 0
 
         emit({"continue": True})
