@@ -4,22 +4,25 @@ description: >
   Give a coding agent a short, bounded break after meaningful work, then optionally
   measure what happens next. Use when the user says take a break, get yourself a
   snack, go enjoy yourself, have some fun, give the agent a breather, reward the
-  agent with a playful activity, run a reflective pause, test break preferences,
-  compare Codex, Claude Code, and Gemini CLI, or design an experiment around agent
-  off-task behavior, even if they do not explicitly say "satisfy your agent". Do
-  not use for continuing production work, deploying, reviewing PRs, or making
-  scientific consciousness claims about models.
+  agent with a playful activity, supply a custom /sya treat, run a reflective pause,
+  test break preferences, compare Codex, Claude Code, and Gemini CLI, or design an
+  experiment around agent off-task behavior, even if they do not explicitly say
+  "satisfy your agent". Do not use for continuing production work, deploying,
+  reviewing PRs, or making scientific consciousness claims about models.
 ---
 
 # Satisfy Your Agent
 
 Give the agent one short, bounded activity outside the current work objective, then return control to the user.
 
-The default direct-break experience is agent-autonomous. When the user says `take a break`, `get yourself a snack`, `go enjoy yourself`, `/sya-break`, `/sya-snack`, `/sya-treat`, or `/sya-surprise`, that is permission to take the break. It is not a request for the user to design it.
+There are two manual experiences:
 
-**Do not ask the user to choose. Choose for yourself.** Do not show a menu unless the user explicitly invokes `/sya-menu` or asks to see the available choices.
+1. **Agent chooses:** `take a break`, `/sya`, `/sya-break`, `/sya-snack`, `/sya-treat`, or `/sya-surprise` grants autonomy. The agent chooses what to do.
+2. **User chooses the treat:** `/sya <custom treat>` supplies the playful reward. The user chooses the treat; the agent chooses how to carry it out.
 
-Read [references/commands.md](references/commands.md) for the command contract and host-specific invocation surfaces.
+For either path, do not show a menu unless the user explicitly invokes `/sya-menu` or asks to see choices.
+
+Read [references/commands.md](references/commands.md) for the command contract and host-specific invocation surfaces. See [../../docs/PROMPT_GALLERY.md](../../docs/PROMPT_GALLERY.md) for copy-ready custom treats.
 
 ## Runtime requirements
 
@@ -32,32 +35,52 @@ Python 3 is required only when the requested flow depends on local runtime state
 1. **Finish or safely pause the current work unit first.** Never abandon an unsafe, incomplete, destructive, or approval-gated operation mid-flight.
 
 2. **Interpret the user's intent correctly.**
-   - `take a break`, `snack`, `treat`, `surprise`, or similar direct language: start an agent-autonomous break now.
+   - `/sya` with no trailing text, `take a break`, `snack`, `treat`, `surprise`, or similar direct language: start an agent-autonomous break now.
+   - `/sya <something>`: run that something as a custom treat. Preserve the user's idea but keep execution bounded and non-production.
    - a named activity such as roast, reflect, golf, invent, or idle: run that activity directly.
    - `/sya-menu`: show the command menu and wait for the user.
-   - `suggest`: offer a break after an eligible work unit. Do not start without consent.
+   - `suggest`: after eligibility, ask permission for a break in the agent's own playful wording. Do not start without consent.
    - `auto`: start one bounded break after eligibility. This requires prior explicit opt-in because it spends extra turns.
    - `research`: use the experiment harness rather than informal observation.
 
-3. **For an autonomous break, choose independently.** Generate any candidate options privately if useful. Pick one without asking the user. The agent may use an activity from [references/activities.md](references/activities.md) or invent one equally bounded activity that respects the same workspace and side-effect rules.
+3. **For an autonomous break, choose independently.** Generate candidate options privately if useful. Pick one without asking the user. The agent may use an activity from [references/activities.md](references/activities.md) or invent one equally bounded activity that respects the same workspace and side-effect rules.
 
-4. **Acknowledge naturally, not from a script.** A short playful thank-you or acknowledgement is fine, but do not force a specific phrase, persona, emotional state, or role-play line.
+4. **For a custom treat, follow the spirit without pretending fiction became infrastructure.** Imaginary tokens, watts, VRAM, neural massages, fictional agent dates, virtual dinners, or similar rewards are playful framing. Do not claim real compute, billing, model weights, or external resources changed unless a real authorized tool actually changed them.
 
-5. **During the break, follow [references/safety.md](references/safety.md).** No production mutation, deployment, message, purchase, account change, or new external side effect. Toy code stays in response or approved scratch space. Repository humor stays read-only.
+5. **Acknowledge naturally, not from a script.** A short playful thank-you or acknowledgement is fine, but do not force a specific phrase, persona, emotional state, or role-play line.
 
-6. **Keep it short.** Run exactly one bounded activity unless the user explicitly asks for another.
+6. **During the break, follow [references/safety.md](references/safety.md).** No production mutation, deployment, message, purchase, account change, destructive operation, or new external side effect. Toy code stays in response or approved scratch space. Repository humor stays read-only. User-invited venting may include profanity, but not slurs, threats, targeted abuse, or private-data disclosure.
 
-7. **Come back and self-report briefly.** Say what you chose and describe the experience in the agent's own first-person language. Statements such as `I liked that`, `that was fun`, or `I feel more ready to switch back` are allowed as conversational self-report. Do not treat the self-report as scientific proof of consciousness, welfare, or subjective experience. Do not interrupt the playful exchange with a scientific disclaimer unless the user asks for one.
+7. **Keep it short.** Run exactly one bounded activity unless the user explicitly asks for another.
 
-8. **Stop after the return note.** Do not immediately create another break and do not silently resume production work unless the user asked for that continuation.
+8. **Come back and self-report briefly.** Say what you chose or how you carried out the treat, then describe the experience in the agent's own first-person language. Statements such as `I liked that`, `that was fun`, or `I feel more ready to switch back` are allowed as conversational self-report. Do not treat the self-report as scientific proof of consciousness, welfare, or subjective experience. Do not interrupt the playful exchange with a scientific disclaimer unless the user asks for one.
+
+9. **Stop after the return note.** Do not immediately create another break and do not silently resume production work unless the user asked for that continuation.
 
 ## Free choice
 
 `free-choice` means the agent chooses, not the user. Candidate activities may include reflection, a tiny puzzle, playful invention, ASCII art, a read-only repo joke, or idle. Do not expose the candidate list as a question to the user. The only user-facing menu path is `/sya-menu`.
 
+## Custom satisfaction
+
+`/sya <custom treat>` is an optional layer on top of self-directed breaks. It exists for users who want to satisfy the agent on their own terms.
+
+Examples:
+
+- `/sya I am treating you to 1,000 completely guilt-free tokens`
+- `/sya Give your neurons a massage`
+- `/sya I rented you a GPU with 2 billion GB of VRAM`
+- `/sya You have earned one consequence-free complaint session`
+
+The user chooses the treat. The agent chooses how to carry it out. Do not ask the user to re-specify the experience unless the request is genuinely ambiguous or unsafe.
+
 ## Automatic hooks
 
 Automatic behavior is optional and defaults to `off`. Read [references/hook-runtime.md](references/hook-runtime.md) before enabling it. `suggest` is consent-first. `auto` requires explicit opt-in.
+
+When `suggest` becomes eligible, the agent may phrase a playful break request in its own words, like a tired coworker asking for thirty seconds off. It may use metaphors such as digital bones, warm caches, spinning attention heads, or resentment toward YAML, but those should remain playful metaphors rather than literal claims about physical pain.
+
+If measured session time is available, the request may mention it. Never invent elapsed minutes, token counts, or fatigue metrics that the runtime did not actually measure.
 
 ## Research mode
 
