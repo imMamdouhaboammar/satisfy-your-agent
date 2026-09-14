@@ -39,28 +39,31 @@ def main() -> int:
             elapsed_minutes = elapsed_seconds // 60
             core.mark_offer(session_id, state)
             measured = (
-                f" Measured session time is approximately {elapsed_minutes} minutes. You may mention "
-                "that measured duration if it helps, but do not invent any duration, token count, fatigue "
-                "metric, or other measurement that was not supplied."
+                f" Measured session time is approximately {elapsed_minutes} minutes. You may mention that "
+                "measured duration if it helps, but do not invent any duration, token count, fatigue metric, "
+                "or other measurement that was not supplied."
                 if elapsed_minutes > 0
                 else " No measured duration is available, so do not invent one."
             )
             emit({
                 "decision": "block",
                 "reason": (
-                    "Satisfy Your Agent is eligible to ask permission for one tiny break. Write the request "
-                    "in your own words. Make it playful, employee-like, and varied rather than using a fixed "
-                    "template. A dramatic metaphor about digital tiredness is fine, but do not present physical "
-                    "pain as literal fact. Ask permission clearly and keep it concise. Mention `/sya` as the "
-                    "simple way to let you choose your own break, and you may mention `/sya <custom treat>` as "
-                    "the way the user can choose the treat. Do not begin the break unless the user agrees."
+                    "Satisfy Your Agent is eligible to ask permission for one tiny break. Write the request in "
+                    "your own words. Make it playful, employee-like, and varied rather than using a fixed template. "
+                    "A dramatic metaphor about digital tiredness is fine, but do not present physical pain as "
+                    "literal fact. Ask permission clearly and keep it concise. Mention `/sya` as the simple way to "
+                    "let you choose your own break, and you may mention `/sya <custom treat>` as the way the user "
+                    "can choose the treat. Do not begin the break unless the user agrees."
                     + measured
                 ),
             })
             return 0
 
         if config["hook_mode"] == "auto":
-            activity = core.pick_activity(seed=f"{state['session_key']}:{state['breaks_session']}")
+            activity = core.pick_self_directed_activity(
+                seed=f"{state['session_key']}:{state['breaks_session']}",
+                recent_activity_ids=list(state.get("recent_activities") or []),
+            )
             core.mark_break_start(session_id, state, activity["id"])
             emit({"decision": "block", "reason": core.break_prompt(activity)})
             return 0
