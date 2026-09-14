@@ -1,114 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">Satisfy Your Agent animated logo</title>
-  <desc id="desc">The original relaxed terminal mascot gently breathing on its pillow while the antenna treat bobs and the existing sparkles pulse.</desc>
+<title id="title">Satisfy Your Agent animated logo</title>
+<desc id="desc">A relaxed terminal mascot bobbing on its pillow while the antenna treat bounces and the existing sparkles pulse.</desc>
+<g fill="none" stroke="#171717" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
 
-  <style>
-    .agent-float {
-      transform-box: view-box;
-      transform-origin: 256px 260px;
-      animation: agent-float 4.8s ease-in-out infinite;
-    }
-
-    .pillow-breathe {
-      transform-box: view-box;
-      transform-origin: 256px 390px;
-      animation: pillow-breathe 4.8s ease-in-out infinite;
-    }
-
-    .treat-bob {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: treat-bob 2.4s cubic-bezier(.4, 0, .2, 1) infinite;
-    }
-
-    .sparkle {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: sparkle 4.8s ease-in-out infinite;
-    }
-
-    .sparkle-b {
-      animation-delay: .16s;
-    }
-
-    .sparkle-c {
-      animation-delay: .32s;
-    }
-
-    .smile {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: smile-twitch 4.8s ease-in-out infinite;
-    }
-
-    @keyframes agent-float {
-      0%, 100% { transform: translateY(0); }
-      42% { transform: translateY(3px); }
-      58% { transform: translateY(3px); }
-    }
-
-    @keyframes pillow-breathe {
-      0%, 100% { transform: scale(1, 1); }
-      42%, 58% { transform: scale(1.012, .986); }
-    }
-
-    @keyframes treat-bob {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      48% { transform: translateY(-7px) rotate(-4deg); }
-      60% { transform: translateY(-6px) rotate(3deg); }
-    }
-
-    @keyframes sparkle {
-      0%, 25%, 100% { opacity: .42; transform: scale(.86); }
-      36%, 52% { opacity: 1; transform: scale(1.08); }
-      64% { opacity: .62; transform: scale(.94); }
-    }
-
-    @keyframes smile-twitch {
-      0%, 72%, 100% { transform: translateY(0) scaleX(1); }
-      78% { transform: translateY(-1px) scaleX(1.035); }
-      84% { transform: translateY(0) scaleX(1); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .agent-float,
-      .pillow-breathe,
-      .treat-bob,
-      .sparkle,
-      .smile {
-        animation: none !important;
-      }
-    }
-  </style>
-
-  <g fill="none" stroke="#171717" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
-    <g class="pillow-breathe">
-      <path d="M104 359c25-43 73-61 149-55 76 6 129 32 155 76-22 39-69 58-144 58-78 0-132-24-160-79Z" fill="#FFF4EF"/>
-      <path d="M140 369c34 12 72 18 115 18 58 0 104-10 139-30" stroke-width="9" opacity=".42"/>
-    </g>
-
-    <g class="agent-float">
-      <g transform="rotate(-6 256 240)">
-        <path d="M151 137c-9 2-16 10-17 20l-7 120c-1 17 11 31 28 33l193 10c17 1 32-11 33-28l7-119c1-17-11-31-28-33l-189-10c-7 0-14 2-20 7Z" fill="#FFFFFF"/>
-
-        <g class="treat-bob">
-          <path d="M258 131l4-38"/>
-          <circle cx="263" cy="79" r="13" fill="#FF775F"/>
-        </g>
-
-        <path d="M184 213c13 11 27 11 41 1"/>
-        <path d="M293 220c13 11 27 11 41 1"/>
-        <path class="smile" d="M227 263c17 19 42 21 63 5"/>
-        <path d="M167 173l18 1" stroke-width="10"/>
-        <path d="M330 181l18 1" stroke-width="10"/>
-
-        <path d="M144 286c-20 3-34 16-42 39"/>
-        <path d="M369 304c20 7 32 19 39 36"/>
-      </g>
-    </g>
-
-    <path class="sparkle sparkle-a" d="M388 112l6-17" stroke-width="10"/>
-    <path class="sparkle sparkle-b" d="M411 127l16-6" stroke-width="10"/>
-    <path class="sparkle sparkle-c" d="M397 143l9 15" stroke-width="10"/>
+  <g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 0;0 4;0 0" dur="3.6s" repeatCount="indefinite"/>
+    <path d="M104 359c25-43 73-61 149-55 76 6 129 32 155 76-22 39-69 58-144 58-78 0-132-24-160-79Z" fill="#FFF4EF"/>
+    <path d="M140 369c34 12 72 18 115 18 58 0 104-10 139-30" stroke-width="9" opacity=".42"/>
   </g>
+
+  <g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 0;0 -11;0 0" dur="3.6s" repeatCount="indefinite"/>
+    <g transform="rotate(-6 256 240)">
+      <path d="M151 137c-9 2-16 10-17 20l-7 120c-1 17 11 31 28 33l193 10c17 1 32-11 33-28l7-119c1-17-11-31-28-33l-189-10c-7 0-14 2-20 7Z" fill="#FFFFFF"/>
+
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0 0;0 -16;0 0" dur="1.8s" repeatCount="indefinite"/>
+        <path d="M258 131l4-38"/>
+        <circle cx="263" cy="79" r="13" fill="#FF775F">
+          <animate attributeName="r" values="13;16;13" dur="1.8s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <path d="M184 213c13 11 27 11 41 1"/>
+      <path d="M293 220c13 11 27 11 41 1"/>
+      <path d="M227 263c17 19 42 21 63 5"/>
+      <path d="M167 173l18 1" stroke-width="10"/>
+      <path d="M330 181l18 1" stroke-width="10"/>
+      <path d="M144 286c-20 3-34 16-42 39"/>
+      <path d="M369 304c20 7 32 19 39 36"/>
+    </g>
+  </g>
+
+  <path d="M388 112l6-17" stroke-width="10">
+    <animate attributeName="opacity" values=".15;1;.15" dur="1.9s" repeatCount="indefinite"/>
+  </path>
+  <path d="M411 127l16-6" stroke-width="10">
+    <animate attributeName="opacity" values=".15;1;.15" begin=".18s" dur="1.9s" repeatCount="indefinite"/>
+  </path>
+  <path d="M397 143l9 15" stroke-width="10">
+    <animate attributeName="opacity" values=".15;1;.15" begin=".36s" dur="1.9s" repeatCount="indefinite"/>
+  </path>
+</g>
 </svg>
