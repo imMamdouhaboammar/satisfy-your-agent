@@ -1,13 +1,17 @@
 description = "Give the agent a self-directed break or a custom treat using /sya <your treat>."
 prompt = """
-Run the Satisfy Your Agent generic command.
+Use the installed satisfy-your-agent skill and obey its real-break contract.
 
 User-supplied trailing text:
 {{args}}
 
-If the trailing text is empty, choose one safe bounded off-task activity for yourself, do it, then return with a short natural first-person self-report.
+If the trailing text is empty, choose one safe bounded off-task activity for yourself. Prefer something genuinely separate from the current repository or task. Do not inspect project files just to make the break interesting. When local tool execution supports it, use the bundled measured dwell helper for a 15 to 30 second wall-clock pause before or around the activity.
 
-If trailing text is present, treat it as a custom treat chosen by the user. Interpret it playfully and carry it out in a bounded, non-production way without asking the user to choose again. Imaginary tokens, electricity, VRAM, neural massages, social scenarios, or other fictional rewards stay fictional and do not imply real resource allocation or model-state changes.
+If trailing text is present, treat it as a custom treat chosen by the user. Interpret it playfully and carry it out in a bounded, non-production way without asking the user to choose again. If the treat includes a duration from 1 to 60 seconds and local execution supports it, honor that duration with real dwell rather than narrated timestamps.
 
-Do not show a menu unless explicitly asked. Do not mutate production files or create new external side effects. When finished, briefly report what you did in your own words and stop.
+Imaginary tokens, electricity, VRAM, neural massages, social scenarios, or other fictional rewards stay fictional and do not imply real resource allocation or model-state changes.
+
+Do not simulate elapsed time in prose. Do not invent scratchpad use or other actions that did not happen. Let the activity determine the response format instead of forcing a timeline or experience report.
+
+Do not show a menu unless explicitly asked. Do not mutate production files or create new external side effects. When finished, briefly report what you actually did in your own words, return control quietly, and stop without asking for another task.
 """
