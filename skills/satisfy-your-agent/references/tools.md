@@ -24,19 +24,33 @@ Use the dwell helper when a break promises actual wall-clock time:
 python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --seconds 20
 ```
 
-It accepts a bounded duration from 1 to 60 seconds and returns structured measurement:
+Or choose a bounded preset:
+
+```bash
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --preset quick
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --preset normal
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --preset proper
+```
+
+Presets currently map to 8, 20, and 45 seconds. Explicit seconds remain bounded from 1 to 60.
+
+The helper returns structured measurement:
 
 ```json
 {
+  "activity_generation_seconds": null,
   "actual_dwell_seconds": 20.003,
   "continuous_thought_claimed": false,
   "requested_break_seconds": 20.0,
   "schema_version": 1,
-  "semantics": "wall-clock-idle-interval"
+  "semantics": "wall-clock-idle-interval",
+  "total_break_wall_time": null
 }
 ```
 
 `actual_dwell_seconds` is measured wall-clock dwell. It is not evidence of continuous thought, inference, reflection, or subjective experience during the wait.
+
+The helper leaves `activity_generation_seconds` and `total_break_wall_time` unset because it cannot observe activity that happens after it exits.
 
 Do not simulate a missing dwell interval with prose. If the helper cannot run, keep the break untimed and say nothing implying that seconds elapsed.
 
