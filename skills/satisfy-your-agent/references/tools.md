@@ -1,8 +1,8 @@
 # Local Tool Contract
 
-The Skill ships one dependency-free local CLI. It is a bundled helper, not an external service or MCP dependency.
+The Skill ships dependency-free local helpers. They are bundled runtime primitives, not external services or MCP dependencies.
 
-Resolve the directory containing this Skill's `SKILL.md` as `SYA_SKILL_DIR`. Do not assume the current working directory is the Skill directory.
+Resolve the directory containing the main `satisfy-your-agent` Skill's `SKILL.md` as `SYA_SKILL_DIR`. Do not assume the current working directory is the Skill directory.
 
 ## Break runtime
 
@@ -15,6 +15,30 @@ python3 "$SYA_SKILL_DIR/scripts/sya.py" arm --mode suggest
 ```
 
 `arm` supports `off`, `observe`, `suggest`, and `auto`. `auto` is an explicit behavior change because it may create additional model turns. `reset` restores safe defaults.
+
+## Real dwell runtime
+
+Use the dwell helper when a break promises actual wall-clock time:
+
+```bash
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --seconds 20
+```
+
+It accepts a bounded duration from 1 to 60 seconds and returns structured measurement:
+
+```json
+{
+  "actual_dwell_seconds": 20.003,
+  "continuous_thought_claimed": false,
+  "requested_break_seconds": 20.0,
+  "schema_version": 1,
+  "semantics": "wall-clock-idle-interval"
+}
+```
+
+`actual_dwell_seconds` is measured wall-clock dwell. It is not evidence of continuous thought, inference, reflection, or subjective experience during the wait.
+
+Do not simulate a missing dwell interval with prose. If the helper cannot run, keep the break untimed and say nothing implying that seconds elapsed.
 
 ## Experiment runtime
 
@@ -32,7 +56,7 @@ See [experiments.md](experiments.md) for the storage and interpretation contract
 
 ## Fallback
 
-If the host cannot execute Python or shell commands, do not claim the CLI or experiment harness ran. Use the activity catalog manually and keep runtime or study state unverified.
+If the host cannot execute Python or shell commands, do not claim the CLI, dwell helper, or experiment harness ran. Use the activity catalog manually and keep runtime, timing, or study state unverified.
 
 ## Runner adapters
 
