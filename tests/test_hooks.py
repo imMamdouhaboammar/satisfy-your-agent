@@ -81,7 +81,9 @@ class HookTests(unittest.TestCase):
             result = run_hook(STOP, {"session_id": "a", "stop_hook_active": False}, env)
             payload = json.loads(result.stdout)
             self.assertEqual(payload["decision"], "block")
-            self.assertIn("Ask the user", payload["reason"])
+            reason = payload["reason"].lower()
+            self.assertIn("ask permission", reason)
+            self.assertIn("do not begin the break unless the user agrees", reason)
 
     def test_hook_ignores_transcript_path_content(self):
         with tempfile.TemporaryDirectory() as tmp:
