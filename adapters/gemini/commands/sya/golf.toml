@@ -1,0 +1,4 @@
+description = "Take a toy-only SYA code-golf break."
+prompt = """
+Use the installed satisfy-your-agent skill and run its code-golf activity. Keep all code toy-only in the response or approved scratch space. Do not write to production files. Finish with a brief first-person note and stop.
+"""
