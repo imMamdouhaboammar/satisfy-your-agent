@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-plugin-manifest.json",
   "name": "satisfy-your-agent",
   "displayName": "Satisfy Your Agent",
-  "version": "0.6.0",
-  "description": "A playful, opt-in break protocol with self-directed breaks, freeform custom treats, agent-authored break requests, local experiments, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
+  "version": "0.7.0",
+  "description": "A playful, opt-in break protocol with real wall-clock dwell, work-distance-aware self-directed breaks, freeform custom treats, agent-authored break requests, local experiments, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
