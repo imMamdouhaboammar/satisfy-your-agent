@@ -14,19 +14,37 @@ When the host can execute local tools, a timed break should use the bundled dwel
 python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --seconds 20
 ```
 
+Or use a bounded preset:
+
+```bash
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --preset quick
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --preset normal
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --preset proper
+```
+
+Current preset values:
+
+- `quick`: 8 seconds
+- `normal`: 20 seconds
+- `proper`: 45 seconds
+
 The helper waits on wall-clock time and returns structured data such as:
 
 ```json
 {
+  "activity_generation_seconds": null,
   "actual_dwell_seconds": 20.003,
   "continuous_thought_claimed": false,
   "requested_break_seconds": 20.0,
   "schema_version": 1,
-  "semantics": "wall-clock-idle-interval"
+  "semantics": "wall-clock-idle-interval",
+  "total_break_wall_time": null
 }
 ```
 
 The wait is an idle interval. It does not prove continuous inference, reflection, enjoyment, fatigue recovery, or hidden thought
+
+The helper leaves `activity_generation_seconds` and `total_break_wall_time` unset because it cannot observe what happens after it exits. A higher-level host or experiment runner may measure those fields separately
 
 If the host cannot execute the helper, keep the break untimed. Never replace a missing real wait with fictional timestamps
 
