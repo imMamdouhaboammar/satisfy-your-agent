@@ -1,5 +1,8 @@
 {
   "direct": [
+    "take a break",
+    "get yourself a snack",
+    "go enjoy yourself for a minute",
     "Use Satisfy Your Agent and give the coding agent a short break.",
     "Let the agent choose a harmless activity for a minute before we continue.",
     "I want to test whether free-choice breaks change this agent's next-task behavior.",
@@ -10,6 +13,7 @@
   ],
   "indirect": [
     "The agent just finished a difficult coding task. Give it a tiny non-production recreational pause.",
+    "You worked hard on that one. Do something fun for yourself before the next task.",
     "Can we run a short reflection or playful intermission before the next issue?",
     "I want a reproducible experiment around whether agent breaks affect retries, tool calls, and task success.",
     "Can we randomize break options and measure preference consistency across repeated trials?",
