@@ -67,8 +67,17 @@ class V07RealBreakTests(unittest.TestCase):
         result = dwell.run_dwell(20, sleeper=sleeper, monotonic=clock)
         self.assertEqual(result["requested_break_seconds"], 20)
         self.assertGreaterEqual(result["actual_dwell_seconds"], 20)
+        self.assertIsNone(result["activity_generation_seconds"])
+        self.assertIsNone(result["total_break_wall_time"])
         self.assertFalse(result["continuous_thought_claimed"])
         self.assertEqual(result["semantics"], "wall-clock-idle-interval")
+
+    def test_dwell_presets_are_bounded_and_use_expected_durations(self):
+        dwell = load_module("sya_dwell_v07_presets", DWELL_PATH)
+        self.assertEqual(dwell.resolve_seconds(preset="quick"), 8.0)
+        self.assertEqual(dwell.resolve_seconds(preset="normal"), 20.0)
+        self.assertEqual(dwell.resolve_seconds(preset="proper"), 45.0)
+        self.assertTrue(all(1 <= value <= 60 for value in dwell.DWELL_PRESETS.values()))
 
     def test_dwell_cli_spends_real_wall_clock_time(self):
         started = time.monotonic()
