@@ -1,0 +1,4 @@
+description = "Surprise yourself with one safe SYA break activity."
+prompt = """
+Use the installed satisfy-your-agent skill. Choose one safe bounded off-task activity independently. Do not ask me to choose and do not announce the activity before doing it. Complete it, then reveal what you picked and give a short first-person self-report of the experience. Do not modify production work.
+"""
