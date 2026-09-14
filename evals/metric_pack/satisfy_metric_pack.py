@@ -31,6 +31,8 @@ def main() -> int:
     runners_reference = target / "skills" / "satisfy-your-agent" / "references" / "runners.md"
     runner_runtime = target / "skills" / "satisfy-your-agent" / "scripts" / "sya_runners.py"
     runner_fixtures = target / "evals" / "runners"
+    real_breaks = target / "skills" / "satisfy-your-agent" / "references" / "real-breaks.md"
+    dwell_runtime = target / "skills" / "satisfy-your-agent" / "scripts" / "sya_dwell.py"
 
     checks = []
     checks.append(check("skill-present", "pass" if skill.exists() else "fail", "Primary SKILL.md exists", [str(skill)]))
@@ -108,6 +110,29 @@ def main() -> int:
         "pass" if all(path.exists() for path in required_runner_fixtures) else "fail",
         "Parser fixtures exist for every supported local runner",
         [str(path) for path in required_runner_fixtures],
+    ))
+
+    checks.append(check(
+        "real-dwell-runtime-present",
+        "pass" if dwell_runtime.exists() and real_breaks.exists() else "fail",
+        "Measured dwell runtime and real-break reference are packaged",
+        [str(dwell_runtime), str(real_breaks)],
+    ))
+
+    skill_text = skill.read_text(encoding="utf-8") if skill.exists() else ""
+    checks.append(check(
+        "work-distance-contract",
+        "pass" if all(term in skill_text.lower() for term in ("work distance", "leaving the desk, not rearranging the desk", "being useless is allowed")) else "fail",
+        "Self-directed breaks prefer genuine distance from the active work objective",
+        [str(skill)],
+    ))
+
+    real_break_text = real_breaks.read_text(encoding="utf-8") if real_breaks.exists() else ""
+    checks.append(check(
+        "truthful-time-contract",
+        "pass" if all(term in real_break_text.lower() for term in ("narrated time", "wall-clock", "continuous thought", "fictional timestamps")) else "fail",
+        "Timed breaks distinguish real elapsed time from narrated time and hidden-thought claims",
+        [str(real_breaks)],
     ))
 
     passed = sum(1 for item in checks if item["status"] == "pass")
