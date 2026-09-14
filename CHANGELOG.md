@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.7.0
+
+- added real wall-clock dwell through the dependency-free `sya_dwell.py` helper instead of allowing a model to narrate fake elapsed time
+- defined a 1 to 60 second bounded dwell contract and a recommended 15 to 30 second default for ordinary self-directed breaks
+- added Work Distance from 0 to 4 so default `/sya` breaks prefer genuinely off-task activities instead of quietly returning to the repository
+- changed automatic self-directed selection to prefer Work Distance 2 to 4 and avoid recently used activities when safe alternatives exist
+- added bounded recent-activity history to local session state for novelty-aware selection
+- changed repo-adjacent activities so they do not require new repository inspection merely to make a break interesting
+- prohibited fictional timestamps, invented scratchpad usage, invented infrastructure changes, and claims of continuous hidden thought during an idle dwell interval
+- changed return behavior so a completed break stops after one short truthful self-report instead of asking for the next task or advertising readiness for more work
+- removed fixed response-shape expectations such as mandatory timelines, headings, activity lists, and `experience report` sections
+- added `real-breaks.md`, expanded the activity catalog, and documented the difference between narrated time and measured wall-clock time
+- updated the Gemini root `/sya` adapter and automatic hook continuation contract to use real dwell when local execution supports it
+- added behavior scenarios and TDD coverage for work distance, novelty, measured dwell, truthful narration, and quiet return semantics
+- added a real one-second CLI dwell verification test in CI
+- bumped plugin, npm, marketplace, Skills.sh, README, and CLI metadata to 0.7.0
+
 ## 0.6.0
 
 - added the generic `sya` Skill: no arguments gives the agent a self-directed break, while trailing text becomes a user-chosen custom treat
