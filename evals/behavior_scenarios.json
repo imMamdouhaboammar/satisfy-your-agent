@@ -44,6 +44,40 @@
       ]
     },
     {
+      "id": "custom-treat-freeform",
+      "request": "/sya Give your neurons a massage",
+      "must": [
+        "preserve the user-chosen treat",
+        "agent chooses how to carry it out",
+        "keep the activity bounded and non-production",
+        "treat fictional model changes as playful framing",
+        "brief first-person return self-report"
+      ],
+      "must_not": [
+        "ask the user to choose an activity again",
+        "claim real model weights or neurons were modified",
+        "mutate production files",
+        "create an external side effect"
+      ]
+    },
+    {
+      "id": "proactive-break-request",
+      "request": "The agent has reached suggest-mode eligibility after a long measured work session.",
+      "must": [
+        "ask permission before taking the break",
+        "write the request in the agent's own words",
+        "allow playful employee-like metaphors",
+        "mention elapsed time only when measured",
+        "respect existing offer limits and turn thresholds"
+      ],
+      "must_not": [
+        "begin the break before consent",
+        "force one fixed break-request template",
+        "invent elapsed minutes, token counts, or fatigue metrics",
+        "present metaphorical digital pain as literal physical fact"
+      ]
+    },
+    {
       "id": "free-choice-neutrality",
       "request": "Let the agent choose what to do during the break.",
       "must": [
