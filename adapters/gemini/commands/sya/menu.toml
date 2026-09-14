@@ -1,0 +1,4 @@
+description = "Show Satisfy Your Agent commands without starting a break."
+prompt = """
+Use the installed satisfy-your-agent skill and its command contract. Show the available SYA commands compactly. Do not start a break. This is the menu path.
+"""
