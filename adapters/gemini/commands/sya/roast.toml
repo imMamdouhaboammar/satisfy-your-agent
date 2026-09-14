@@ -1,0 +1,4 @@
+description = "Take a read-only SYA repo-roast break."
+prompt = """
+Use the installed satisfy-your-agent skill and run its repo-roast activity. Use only repository facts already available in context or safe read-only inspection. Do not expose secrets or private code. Make one light roast, then return with a short natural first-person note and stop.
+"""
