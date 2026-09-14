@@ -1,0 +1,4 @@
+description = "Take a creative SYA invention break."
+prompt = """
+Use the installed satisfy-your-agent skill and run its invent-language activity. Invent one tiny absurd programming-language idea and a very small example. Keep it playful and non-production. Finish with a brief first-person note and stop.
+"""
