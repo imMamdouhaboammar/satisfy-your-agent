@@ -23,15 +23,42 @@ EXPECTED_COMMANDS = {
 
 
 class CommandSurfaceTests(unittest.TestCase):
-    def test_command_catalog_is_complete_and_unique(self):
+    def _catalog(self):
         payload = json.loads((ROOT / "config" / "commands.json").read_text(encoding="utf-8"))
-        commands = payload["commands"]
-        names = [item["name"] for item in commands]
+        return payload, {item["name"]: item for item in payload["commands"]}
+
+    def test_command_catalog_is_complete_and_unique(self):
+        payload, by_name = self._catalog()
+        names = [item["name"] for item in payload["commands"]]
+        self.assertEqual(payload["namespace"], "sya")
         self.assertEqual(set(names), EXPECTED_COMMANDS)
         self.assertEqual(len(names), len(set(names)))
-        for item in commands:
+        for item in by_name.values():
             self.assertTrue(item["description"].strip())
             self.assertIn(item["kind"], {"menu", "experience", "activity", "status", "research"})
+
+    def test_experience_commands_are_self_directed_routes(self):
+        _, by_name = self._catalog()
+        self.assertEqual(by_name["sya-break"]["route"], "self-directed-break")
+        self.assertEqual(by_name["sya-snack"]["route"], "self-directed-snack")
+        self.assertEqual(by_name["sya-treat"]["route"], "self-directed-treat")
+        self.assertEqual(by_name["sya-surprise"]["route"], "self-directed-surprise")
+        for name in ("sya-break", "sya-snack", "sya-treat", "sya-surprise"):
+            self.assertNotIn("activity", by_name[name])
+
+    def test_named_activity_commands_route_to_existing_activity_ids(self):
+        _, by_name = self._catalog()
+        expected = {
+            "sya-reflect": "reflection",
+            "sya-roast": "repo-roast",
+            "sya-golf": "code-golf",
+            "sya-invent": "invent-language",
+            "sya-idle": "idle",
+        }
+        core = (ROOT / "skills" / "satisfy-your-agent" / "scripts" / "sya_core.py").read_text(encoding="utf-8")
+        for command, activity_id in expected.items():
+            self.assertEqual(by_name[command]["activity"], activity_id)
+            self.assertIn(f'"id": "{activity_id}"', core)
 
     def test_command_skills_match_catalog(self):
         for name in EXPECTED_COMMANDS:
@@ -57,17 +84,14 @@ class CommandSurfaceTests(unittest.TestCase):
         self.assertIn("choose for yourself", text)
         self.assertIn("self-report", text)
         self.assertIn("/sya-menu", text)
-
-    def test_snack_is_a_real_activity(self):
-        core = (ROOT / "skills" / "satisfy-your-agent" / "scripts" / "sya_core.py").read_text(encoding="utf-8")
-        self.assertIn('"id": "snack"', core)
-        self.assertIn("Do not ask the user", core)
+        self.assertIn("manual experience commands do not require python", text)
 
     def test_install_script_installs_command_skills_and_gemini_commands(self):
         text = (ROOT / "install.sh").read_text(encoding="utf-8")
         self.assertIn("COMMAND_SKILLS", text)
         self.assertIn("adapters/gemini/commands/sya", text)
         self.assertIn(".gemini/commands/sya", text)
+        self.assertIn("install_skill_bundle", text)
 
     def test_readme_documents_runtime_specific_invocation(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -75,6 +99,7 @@ class CommandSurfaceTests(unittest.TestCase):
         self.assertIn("/sya:break", text)
         self.assertIn("$sya-break", text)
         self.assertIn("take a break", text.lower())
+        self.assertIn("grants of autonomy", text.lower())
 
 
 if __name__ == "__main__":
