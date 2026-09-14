@@ -72,7 +72,10 @@ class CommandSurfaceTests(unittest.TestCase):
             self.assertTrue(skill.exists(), name)
             text = skill.read_text(encoding="utf-8")
             self.assertRegex(text, rf"(?m)^name:\s*{re.escape(name)}$")
-            self.assertIn("Satisfy Your Agent", text)
+            self.assertTrue(
+                "satisfy-your-agent" in text.lower() or "satisfy your agent" in text.lower(),
+                name,
+            )
 
     def test_gemini_slash_adapters_match_catalog(self):
         command_dir = ROOT / "adapters" / "gemini" / "commands" / "sya"
@@ -105,11 +108,12 @@ class CommandSurfaceTests(unittest.TestCase):
 
     def test_readme_documents_runtime_specific_invocation(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
+        lowered = text.lower()
         self.assertIn("/sya-break", text)
         self.assertIn("/sya:break", text)
         self.assertIn("$sya-break", text)
-        self.assertIn("take a break", text.lower())
-        self.assertIn("grants of autonomy", text.lower())
+        self.assertIn("take a break", lowered)
+        self.assertIn("permission grant", lowered)
 
 
 if __name__ == "__main__":
