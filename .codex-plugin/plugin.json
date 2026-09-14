@@ -1,12 +1,13 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.4.0",
-  "description": "A playful, opt-in agent break protocol with local behavioral experiments and cross-agent runner adapters.",
+  "version": "0.5.0",
+  "description": "A playful, opt-in agent break protocol with self-directed command skills, local behavioral experiments, and cross-agent runner adapters.",
   "homepage": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "repository": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "license": "MIT",
   "keywords": [
     "coding-agents",
+    "slash-commands",
     "llm",
     "agent-behavior",
     "experiments",
@@ -18,8 +19,8 @@
   "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Satisfy Your Agent",
-    "shortDescription": "Give your coding agent a tiny break after real work",
-    "longDescription": "A playful, opt-in break protocol and local experiment harness for bounded off-task activities, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
+    "shortDescription": "Give your coding agent a tiny self-directed break after real work",
+    "longDescription": "A playful, opt-in break protocol and local experiment harness with self-directed break commands, bounded off-task activities, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
     "developerName": "Mamdouh",
     "category": "Developer Tools",
     "capabilities": [
@@ -27,7 +28,8 @@
     ],
     "websiteURL": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
     "defaultPrompt": [
-      "Give my agent a short break after this task.",
+      "Take a break now and choose something for yourself.",
+      "Get yourself a tiny snack after this task.",
       "Run a preference probe for this agent.",
       "Compare break preferences across my installed agent CLIs."
     ],
