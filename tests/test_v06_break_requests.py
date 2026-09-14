@@ -11,7 +11,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STOP = ROOT / "hooks" / "stop.py"
 START = ROOT / "hooks" / "session_start.py"
-CLI = ROOT / "skills" / "satisfy-your-agent" / "scripts" / "sya.py"
 
 
 def run_hook(path: Path, event: dict, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
@@ -77,27 +76,23 @@ class V06BreakRequestTests(unittest.TestCase):
             self.assertIn("ask permission", reason)
             self.assertNotIn("my digital bones ache", reason)
 
-    def test_elapsed_threshold_is_configurable_from_cli(self):
+    def test_elapsed_threshold_delays_suggestion_until_measured_time_passes(self):
         with tempfile.TemporaryDirectory() as tmp:
-            result = subprocess.run(
-                [
-                    "python3",
-                    str(CLI),
-                    "--data-dir",
-                    tmp,
-                    "arm",
-                    "--mode",
-                    "suggest",
-                    "--min-elapsed-seconds",
-                    "3600",
-                ],
-                text=True,
-                capture_output=True,
-                check=False,
-            )
-            self.assertEqual(result.returncode, 0, result.stderr)
-            payload = json.loads(result.stdout)
-            self.assertEqual(payload["min_elapsed_seconds"], 3600)
+            env = self.env(tmp)
+            config = self.config()
+            config["min_elapsed_seconds"] = 3600
+            Path(tmp, "config.json").write_text(json.dumps(config), encoding="utf-8")
+            run_hook(START, {"session_id": "timed-shift"}, env)
+            early = run_hook(STOP, {"session_id": "timed-shift", "stop_hook_active": False}, env)
+            self.assertEqual(json.loads(early.stdout), {"continue": True})
+
+            session_file = next(Path(tmp, "sessions").glob("*.json"))
+            state = json.loads(session_file.read_text(encoding="utf-8"))
+            state["started_at_epoch_ms"] = int((time.time() - 61 * 60) * 1000)
+            session_file.write_text(json.dumps(state), encoding="utf-8")
+
+            late = run_hook(STOP, {"session_id": "timed-shift", "stop_hook_active": False}, env)
+            self.assertEqual(json.loads(late.stdout)["decision"], "block")
 
 
 if __name__ == "__main__":
