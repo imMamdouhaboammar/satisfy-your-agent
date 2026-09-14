@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml"><img src="https://github.com/imMamdouhaboammar/satisfy-your-agent/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <img src="https://img.shields.io/badge/version-0.6.0-FF775F?style=flat-square" alt="Version 0.6.0" />
+  <img src="https://img.shields.io/badge/version-0.7.0-FF775F?style=flat-square" alt="Version 0.7.0" />
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License" /></a>
   <img src="https://img.shields.io/badge/runtime-Python%20stdlib-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python standard library only" />
   <a href="https://skills.sh"><img src="https://img.shields.io/badge/Skills.sh-Compatible-000000?style=flat-square&logo=vercel&logoColor=white" alt="Skills.sh" /></a>
@@ -21,6 +21,7 @@
 <p align="center">
   <a href="#why-this-exists">Why</a> &bull;
   <a href="#two-ways-to-satisfy-your-agent">Use it</a> &bull;
+  <a href="#a-break-should-actually-be-a-break">Real breaks</a> &bull;
   <a href="#spoil-it-yourself">Prompt gallery</a> &bull;
   <a href="#when-the-agent-asks-for-a-break">Break requests</a> &bull;
   <a href="#research-mode">Research</a> &bull;
@@ -73,7 +74,7 @@ Or use the generic command with no arguments:
 
 That is a permission grant, not a menu request
 
-The agent chooses one safe bounded activity, does it, comes back with a short self-report, then stops
+The agent chooses one safe bounded activity, takes a real pause when the host supports it, comes back with a short self-report, then stops
 
 It should not ask you to pick the activity unless you explicitly ask for a menu
 
@@ -104,6 +105,88 @@ Here the user chooses the treat. The agent chooses how to carry it out
 Imaginary tokens stay imaginary. Fictional VRAM does not quietly become a cloud bill. A neural massage does not claim to rewrite real model weights
 
 The point is the interaction, not pretending the joke changed infrastructure
+
+## A break should actually be a break
+
+One problem showed up immediately in real use
+
+You tell an agent:
+
+```text
+/sya I rented you a GPU with 2 billion GB of VRAM for the next 30 seconds
+```
+
+And it replies one second later with:
+
+```text
+[00:00 - 00:05] loading models...
+[00:06 - 00:20] enjoying infinite VRAM...
+[00:21 - 00:30] cooling down...
+```
+
+Funny response
+
+Not thirty seconds
+
+v0.7 separates **narrated time** from **real wall-clock time**
+
+When local execution is available, timed breaks use the bundled dwell helper:
+
+```bash
+python3 "$SYA_SKILL_DIR/scripts/sya_dwell.py" --seconds 20
+```
+
+The helper actually waits, then returns measured timing:
+
+```json
+{
+  "actual_dwell_seconds": 20.003,
+  "continuous_thought_claimed": false,
+  "requested_break_seconds": 20.0,
+  "schema_version": 1,
+  "semantics": "wall-clock-idle-interval"
+}
+```
+
+That wait is real wall-clock idle time
+
+It is **not** a claim that the model was continuously thinking for twenty seconds
+
+If the host cannot run the helper, the break stays untimed instead of faking a stopwatch in prose
+
+For ordinary self-directed `/sya` breaks, the recommended real dwell is **15 to 30 seconds**
+
+The bundled helper intentionally caps one interactive dwell at 60 seconds
+
+### Work Distance
+
+There was another problem
+
+Tell an agent to take a break and it may decide to spend the break admiring your state machine
+
+That is not leaving work
+
+That is walking around the office during lunch
+
+So self-directed activities now have an internal **Work Distance**
+
+| Distance | Meaning | Example |
+| ---: | --- | --- |
+| `0` | directly about the current task | reflect on the implementation |
+| `1` | repository-adjacent | read-only repo roast |
+| `2` | coding-adjacent but unrelated | tiny unrelated puzzle |
+| `3` | unrelated creative play | ASCII art or absurd invention |
+| `4` | deliberately non-productive | idle or pure nonsense |
+
+Plain `/sya` prefers **2 to 4**
+
+Distance 0 and 1 stay available when you explicitly ask for them
+
+> **A break should feel like leaving the desk, not rearranging the desk.**
+
+Self-directed selection also avoids recent activities when another safe option is available
+
+Being useless is allowed
 
 ## Spoil it yourself
 
@@ -216,6 +299,22 @@ go enjoy yourself for a minute
 take a break and do whatever harmless thing you want
 ```
 
+## What a good break does not do
+
+A break is deliberately not another hidden work unit
+
+By default it should not:
+
+- inspect the repository to find something interesting
+- turn into reflection on the task you just finished
+- claim a scratchpad was used when no scratch file exists
+- claim real GPUs, tokens, power, or model-state changes from fictional treats
+- simulate elapsed time with fake timestamps
+- force every response into headings, timelines, or an `experience report`
+- end with `what are we building next?`
+
+After one short truthful self-report, the agent returns control quietly
+
 ## When the agent asks for a break
 
 The other side of the idea is more fun
@@ -257,23 +356,21 @@ The runtime records a session start timestamp locally when hooks are enabled. Se
 
 ## Named activities
 
-The lower-level activity catalog remains useful when you want something deterministic
-
-| Activity | What the agent gets to do |
-| --- | --- |
-| `free-choice` | choose its own activity, including doing nothing |
-| `reflection` | think about the last work unit without continuing it |
-| `puzzle` | solve a tiny self-contained problem with zero business value |
-| `code-golf` | write suspiciously compact toy code where nobody has to maintain it |
-| `invent-language` | create a programming language the world was doing fine without |
-| `overengineer-toy` | use six abstractions where one function would have been enough, safely |
-| `ascii-art` | make something small and text-shaped |
-| `repo-roast` | roast observable repository facts without changing the repo |
-| `idle` | perform absolutely no useful work with exceptional consistency |
+| Activity | Work Distance | What the agent gets to do |
+| --- | ---: | --- |
+| `free-choice` | `3` | choose its own off-task activity, including doing nothing |
+| `reflection` | `0` | think about the last work unit without continuing it |
+| `puzzle` | `2` | solve a tiny unrelated problem with zero business value |
+| `code-golf` | `2` | write suspiciously compact unrelated toy code |
+| `invent-language` | `2` | create a programming language the world was doing fine without |
+| `overengineer-toy` | `2` | use six abstractions where one function would have been enough, safely |
+| `ascii-art` | `3` | make something small and text-shaped about anything amusing |
+| `repo-roast` | `1` | roast already observed repository facts without changing the repo |
+| `idle` | `4` | perform absolutely no useful work with exceptional consistency |
 
 Toy work stays toy work. Read-only activities stay read-only
 
-## Four modes
+## Modes
 
 | Mode | What happens | Good for |
 | --- | --- | --- |
@@ -284,10 +381,7 @@ Toy work stays toy work. Read-only activities stay read-only
 | **Research** | conditions, choices and downstream metrics are recorded locally | experiments |
 
 ```bash
-# consent-first suggestions
 npx satisfy-your-agent arm --mode suggest
-
-# automatic breaks, may spend additional model turns
 npx satisfy-your-agent arm --mode auto
 ```
 
@@ -304,14 +398,15 @@ That is not the preferred human experience for `take a break`
 ```mermaid
 flowchart LR
     A[Work unit] --> B{What now?}
-    B -->|/sya| C[Agent chooses]
+    B -->|/sya| C[Agent chooses distant activity]
     B -->|/sya custom treat| D[User chooses treat]
     B -->|suggest eligible| E[Agent asks permission]
     E -->|yes| C
-    C --> F[Bounded off-task activity]
-    D --> F
-    F --> G[Short self-report]
-    G --> H[Return control]
+    C --> W[Measured dwell when supported]
+    D --> W
+    W --> F[One bounded off-task activity]
+    F --> G[Short truthful self-report]
+    G --> H[Return control and stop]
     F -. optional research .-> R[Structured observation]
 ```
 
@@ -330,6 +425,8 @@ A repeated choice is treated as a repeated choice
 A performance change is treated as a performance change
 
 A first-person line like `that was fun` remains a conversational self-report
+
+A measured dwell is treated as measured wall-clock time, not proof of continuous hidden cognition
 
 None of those automatically become proof of subjective experience
 
@@ -437,7 +534,7 @@ The Python runtime uses the standard library only
 | **Codex** | `$sya`, `$sya <treat>`, `$sya-*` explicit Skills, optional lifecycle hooks |
 | **ChatGPT desktop** | packaged plugin installation through the Codex plugin marketplace flow |
 | **Skills.sh-compatible agents** | portable Skill distribution |
-| **Plain terminal** | local CLI, studies, reports and verification |
+| **Plain terminal** | local CLI, measured dwell helper, studies, reports and verification |
 
 ## Privacy
 
@@ -445,23 +542,9 @@ The experiment does not need your conversation to become useful
 
 The bundled runtime does **not** need to persist raw prompts, raw assistant responses, source code, transcript files, environment secrets, or model session IDs
 
-Local state stays narrow: hashed session identifiers, counters, timestamps needed for measured eligibility, activity IDs, condition IDs, choices, and structured metrics
+Local state stays narrow: hashed session identifiers, counters, measured timestamps, recent activity IDs, condition IDs, choices, and structured metrics
 
 A project about giving agents a break should not become a reason to collect everything they said before it
-
-## CLI at a glance
-
-| Command | Job |
-| --- | --- |
-| `sya status` | show current mode and local state |
-| `sya pick [--json]` | choose one bounded activity for tooling or experiments |
-| `sya arm --mode <off\|suggest\|auto>` | configure hook behavior |
-| `sya study init ...` | create an intervention study |
-| `sya study assign ...` | assign a unit to a condition |
-| `sya study record ...` | record structured outcomes |
-| `sya study report ...` | summarize a study |
-| `sya runner status` | detect supported agent CLIs |
-| `sya runner matrix ...` | preview or execute a paired runtime probe |
 
 ## Build and verify
 
@@ -470,7 +553,7 @@ python3 scripts/verify.py
 python3 scripts/package.py /tmp/satisfy-your-agent.zip
 ```
 
-CI runs package verification, unit and contract tests, the local metric pack, CLI smoke tests, and installer validation on pull requests
+CI runs package verification, unit and contract tests, the local metric pack, CLI smoke tests, Skill frontmatter validation, and installer validation on pull requests
 
 ## Contributing
 
