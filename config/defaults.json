@@ -3,6 +3,7 @@
   "hook_mode": "off",
   "min_tool_calls": 12,
   "min_turns_between_breaks": 3,
+  "min_elapsed_seconds": 0,
   "max_breaks_per_session": 2,
   "workspace_policy": "read-only",
   "telemetry": "aggregate-local",

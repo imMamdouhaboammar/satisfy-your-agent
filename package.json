@@ -1,7 +1,7 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.5.0",
-  "description": "Give your coding agent a self-directed break after real work, then optionally measure what happens next. Includes portable command skills, Gemini slash adapters, preference probes, and cross-runtime experiments.",
+  "version": "0.6.0",
+  "description": "Give your coding agent a self-directed break or a user-chosen custom treat, then optionally measure what happens next. Includes command skills, Gemini slash adapters, proactive break requests, preference probes, and cross-runtime experiments.",
   "type": "module",
   "main": "bin/cli.js",
   "bin": {
@@ -21,6 +21,7 @@
     "scripts",
     "assets",
     "adapters",
+    "docs",
     "SKILL.md",
     "marketplace.json",
     ".skills.json",
@@ -34,6 +35,7 @@
   "keywords": [
     "agent-skill",
     "slash-commands",
+    "custom-prompts",
     "skills-sh",
     "claude-code",
     "cursor",

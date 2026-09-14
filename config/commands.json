@@ -3,6 +3,12 @@
   "namespace": "sya",
   "commands": [
     {
+      "name": "sya",
+      "kind": "custom",
+      "description": "Run /sya with no arguments for a self-directed break, or add freeform text to choose the treat yourself.",
+      "route": "custom-treat"
+    },
+    {
       "name": "sya-menu",
       "kind": "menu",
       "description": "Show the available Satisfy Your Agent commands without starting a break.",

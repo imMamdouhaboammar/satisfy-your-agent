@@ -202,12 +202,10 @@ class V04DistributionTests(unittest.TestCase):
 
 
 class V05CommandSurfaceTests(unittest.TestCase):
-    def test_release_version_is_0_5_0_everywhere(self):
+    def test_release_keeps_v05_contract_or_later(self):
         manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
-        skills = json.loads((ROOT / ".skills.json").read_text(encoding="utf-8"))
-        marketplace = json.loads((ROOT / "marketplace.json").read_text(encoding="utf-8"))
-        self.assertEqual({manifest["version"], pkg["version"], skills["version"], marketplace["version"]}, {"0.5.0"})
+        version = tuple(int(part) for part in manifest["version"].split("."))
+        self.assertGreaterEqual(version, (0, 5, 0))
 
     def test_npm_package_includes_command_adapters(self):
         pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
@@ -222,6 +220,33 @@ class V05CommandSurfaceTests(unittest.TestCase):
         command_dir = ROOT / "adapters" / "gemini" / "commands" / "sya"
         self.assertTrue(command_dir.is_dir())
         self.assertGreaterEqual(len(list(command_dir.glob("*.toml"))), 12)
+
+
+class V06CustomTreatPackageTests(unittest.TestCase):
+    def test_release_version_is_0_6_0_everywhere(self):
+        manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / ".skills.json").read_text(encoding="utf-8"))
+        marketplace = json.loads((ROOT / "marketplace.json").read_text(encoding="utf-8"))
+        self.assertEqual({manifest["version"], pkg["version"], skills["version"], marketplace["version"]}, {"0.6.0"})
+
+    def test_generic_skill_root_command_and_gallery_are_packaged(self):
+        self.assertTrue((ROOT / "skills" / "sya" / "SKILL.md").exists())
+        self.assertTrue((ROOT / "adapters" / "gemini" / "commands" / "sya.toml").exists())
+        self.assertTrue((ROOT / "docs" / "PROMPT_GALLERY.md").exists())
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        self.assertIn("docs", pkg["files"])
+
+    def test_defaults_include_measured_elapsed_threshold(self):
+        defaults = json.loads((ROOT / "config" / "defaults.json").read_text(encoding="utf-8"))
+        self.assertIn("min_elapsed_seconds", defaults)
+        self.assertIsInstance(defaults["min_elapsed_seconds"], int)
+
+    def test_prompt_gallery_and_break_request_behavior_evals_exist(self):
+        behavior = json.loads((ROOT / "evals" / "behavior_scenarios.json").read_text(encoding="utf-8"))
+        ids = {item["id"] for item in behavior["scenarios"]}
+        self.assertIn("custom-treat-freeform", ids)
+        self.assertIn("proactive-break-request", ids)
 
 
 if __name__ == "__main__":

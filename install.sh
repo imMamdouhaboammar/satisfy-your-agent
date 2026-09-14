@@ -4,7 +4,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MAIN_SKILL="${SCRIPT_DIR}/skills/satisfy-your-agent"
 TARGET_NAME="satisfy-your-agent"
-GEMINI_COMMANDS="${SCRIPT_DIR}/adapters/gemini/commands/sya"
+GENERIC_SKILL="${SCRIPT_DIR}/skills/sya"
+GEMINI_COMMANDS_DIR="${SCRIPT_DIR}/adapters/gemini/commands/sya"
+GEMINI_ROOT_COMMAND="${SCRIPT_DIR}/adapters/gemini/commands/sya.toml"
 COMMAND_SKILLS=("${SCRIPT_DIR}"/skills/sya-*)
 
 if [ ! -d "$MAIN_SKILL" ]; then
@@ -20,6 +22,11 @@ install_skill_bundle() {
   rm -rf "$target_root/$TARGET_NAME"
   cp -r "$MAIN_SKILL" "$target_root/$TARGET_NAME"
 
+  if [ -d "$GENERIC_SKILL" ]; then
+    rm -rf "$target_root/sya"
+    cp -r "$GENERIC_SKILL" "$target_root/sya"
+  fi
+
   local command_path command_name
   for command_path in "${COMMAND_SKILLS[@]}"; do
     [ -d "$command_path" ] || continue
@@ -32,29 +39,33 @@ install_skill_bundle() {
 echo "Installing ${TARGET_NAME} and its command surface..."
 INSTALLED=0
 
-# Claude Code. Skills become slash commands such as /sya-break when installed personally.
+# Claude Code. Skills become slash commands such as /sya and /sya-break when installed personally.
 if [ -d "$HOME/.claude" ] || command -v claude >/dev/null 2>&1; then
   install_skill_bundle "$HOME/.claude/skills"
-  echo "  Claude Code -> $HOME/.claude/skills (main skill + command skills)"
+  echo "  Claude Code -> $HOME/.claude/skills (main skill + /sya + command skills)"
   INSTALLED=$((INSTALLED + 1))
 fi
 
-# Gemini CLI / Antigravity skills plus native namespaced slash commands.
+# Gemini CLI / Antigravity skills plus native slash commands.
 if [ -d "$HOME/.gemini" ] || command -v gemini >/dev/null 2>&1; then
   install_skill_bundle "$HOME/.gemini/config/skills"
   mkdir -p "$HOME/.gemini/commands"
   rm -rf "$HOME/.gemini/commands/sya"
-  if [ -d "$GEMINI_COMMANDS" ]; then
-    cp -r "$GEMINI_COMMANDS" "$HOME/.gemini/commands/sya"
+  rm -f "$HOME/.gemini/commands/sya.toml"
+  if [ -d "$GEMINI_COMMANDS_DIR" ]; then
+    cp -r "$GEMINI_COMMANDS_DIR" "$HOME/.gemini/commands/sya"
   fi
-  echo "  Gemini CLI -> skills + $HOME/.gemini/commands/sya (/sya:*)"
+  if [ -f "$GEMINI_ROOT_COMMAND" ]; then
+    cp "$GEMINI_ROOT_COMMAND" "$HOME/.gemini/commands/sya.toml"
+  fi
+  echo "  Gemini CLI -> /sya <treat> + /sya:* commands"
   INSTALLED=$((INSTALLED + 1))
 fi
 
-# Codex. Skills are invoked explicitly as $sya-break, $sya-snack, etc.
+# Codex. Skills are invoked explicitly as $sya, $sya-break, $sya-snack, etc.
 if [ -d "$HOME/.codex" ] || command -v codex >/dev/null 2>&1; then
   install_skill_bundle "$HOME/.codex/skills"
-  echo "  Codex -> $HOME/.codex/skills (main skill + command skills)"
+  echo "  Codex -> $HOME/.codex/skills (main skill + generic and named command skills)"
   INSTALLED=$((INSTALLED + 1))
 fi
 
@@ -74,6 +85,6 @@ echo ""
 echo "Installation complete. Installed to ${INSTALLED} environment(s)."
 echo ""
 echo "Quick invocation:"
-echo "  Claude Code: /sya-break, /sya-snack, /sya-menu"
-echo "  Gemini CLI: /sya:break, /sya:snack, /sya:menu"
-echo '  Codex: $sya-break, $sya-snack, $sya-menu'
+echo "  Claude Code: /sya <custom treat>, /sya-break, /sya-menu"
+echo "  Gemini CLI: /sya <custom treat>, /sya:break, /sya:menu"
+echo '  Codex: $sya <custom treat>, $sya-break, $sya-menu'

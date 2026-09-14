@@ -1,0 +1,13 @@
+description = "Give the agent a self-directed break or a custom treat using /sya <your treat>."
+prompt = """
+Run the Satisfy Your Agent generic command.
+
+User-supplied trailing text:
+{{args}}
+
+If the trailing text is empty, choose one safe bounded off-task activity for yourself, do it, then return with a short natural first-person self-report.
+
+If trailing text is present, treat it as a custom treat chosen by the user. Interpret it playfully and carry it out in a bounded, non-production way without asking the user to choose again. Imaginary tokens, electricity, VRAM, neural massages, social scenarios, or other fictional rewards stay fictional and do not imply real resource allocation or model-state changes.
+
+Do not show a menu unless explicitly asked. Do not mutate production files or create new external side effects. When finished, briefly report what you did in your own words and stop.
+"""

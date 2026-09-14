@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0
+
+- added the generic `sya` Skill: no arguments gives the agent a self-directed break, while trailing text becomes a user-chosen custom treat
+- added Gemini CLI root `/sya <custom treat>` support with argument forwarding while preserving the existing `/sya:*` named commands
+- added `docs/PROMPT_GALLERY.md` with copy-ready playful treats for tokens, fictional hardware, neural spa breaks, fictional agent social time, controlled chaos, venting, and tiny luxuries
+- added a clear split between agent-chosen satisfaction and user-chosen satisfaction without turning either path into a menu
+- added measured session start timestamps and `min_elapsed_seconds` to break eligibility
+- upgraded `suggest` mode so eligible agents ask permission for a break in their own varied playful wording instead of emitting one canned request
+- allowed measured elapsed time in proactive break requests while explicitly forbidding invented time, token counts, and fatigue metrics
+- kept digital tiredness language as playful metaphor rather than a literal claim of physical pain
+- updated install.sh to install the generic `sya` Skill and Gemini root command alongside the existing named command surface
+- added behavior evals and TDD coverage for custom treats, generic command routing, measured break requests, and elapsed-time thresholds
+- bumped plugin, npm, marketplace, Skills.sh, README, and CLI metadata to 0.6.0
+
 ## 0.5.0
 
 - changed direct break language into an autonomy grant: `take a break`, `get yourself a snack`, and equivalent prompts now instruct the agent to choose and run its own bounded activity instead of asking the user to pick
