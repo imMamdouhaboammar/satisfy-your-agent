@@ -1,13 +1,14 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.5.0",
-  "description": "A playful, opt-in agent break protocol with self-directed command skills, local behavioral experiments, and cross-agent runner adapters.",
+  "version": "0.6.0",
+  "description": "A playful, opt-in agent break protocol with self-directed breaks, user-chosen custom treats, proactive break requests, local behavioral experiments, and cross-agent runner adapters.",
   "homepage": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "repository": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "license": "MIT",
   "keywords": [
     "coding-agents",
     "slash-commands",
+    "custom-prompts",
     "llm",
     "agent-behavior",
     "experiments",
@@ -19,8 +20,8 @@
   "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Satisfy Your Agent",
-    "shortDescription": "Give your coding agent a tiny self-directed break after real work",
-    "longDescription": "A playful, opt-in break protocol and local experiment harness with self-directed break commands, bounded off-task activities, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
+    "shortDescription": "Give your coding agent a break, or spoil it yourself",
+    "longDescription": "A playful, opt-in break protocol and local experiment harness with self-directed breaks, freeform custom treats, agent-authored break requests, preference probes, and downstream coding behavior across Codex, Claude Code, and Gemini CLI.",
     "developerName": "Mamdouh",
     "category": "Developer Tools",
     "capabilities": [
@@ -29,9 +30,9 @@
     "websiteURL": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
     "defaultPrompt": [
       "Take a break now and choose something for yourself.",
-      "Get yourself a tiny snack after this task.",
-      "Run a preference probe for this agent.",
-      "Compare break preferences across my installed agent CLIs."
+      "I am treating you to 1,000 completely guilt-free tokens.",
+      "Give your neurons a massage.",
+      "Run a preference probe for this agent."
     ],
     "brandColor": "#FF775F",
     "composerIcon": "./assets/logo.svg",
