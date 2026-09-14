@@ -96,7 +96,8 @@ class CommandSurfaceTests(unittest.TestCase):
         self.assertIn("choose independently", text)
         self.assertIn("self-report", text)
         self.assertIn("/sya-menu", text)
-        self.assertIn("manual experience commands do not require python", text)
+        self.assertIn("manual experience commands can still run without python", text)
+        self.assertIn("timed break must not be faked", text)
 
     def test_install_script_installs_command_skills_and_gemini_commands(self):
         text = (ROOT / "install.sh").read_text(encoding="utf-8")

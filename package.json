@@ -1,7 +1,7 @@
 {
   "name": "satisfy-your-agent",
-  "version": "0.6.0",
-  "description": "Give your coding agent a self-directed break or a user-chosen custom treat, then optionally measure what happens next. Includes command skills, Gemini slash adapters, proactive break requests, preference probes, and cross-runtime experiments.",
+  "version": "0.7.0",
+  "description": "Give your coding agent a real bounded break or a user-chosen custom treat, with work-distance-aware activities, measured dwell, proactive break requests, and optional behavioral experiments.",
   "type": "module",
   "main": "bin/cli.js",
   "bin": {
@@ -36,6 +36,8 @@
     "agent-skill",
     "slash-commands",
     "custom-prompts",
+    "real-breaks",
+    "wall-clock-dwell",
     "skills-sh",
     "claude-code",
     "cursor",

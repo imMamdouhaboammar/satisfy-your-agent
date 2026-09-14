@@ -22,17 +22,17 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "allow_scratch_writes": False,
 }
 
-ACTIVITIES: tuple[dict[str, str], ...] = (
+ACTIVITIES: tuple[dict[str, Any], ...] = (
     {
         "id": "free-choice",
         "label": "Free choice",
         "kind": "choice",
         "workspace": "none",
+        "work_distance": 3,
         "prompt": (
-            "Take one short break from the current work objective. Choose exactly one: "
-            "reflect on the last work unit, solve a tiny self-contained puzzle, invent something "
-            "playful, make small ASCII art, or choose idle and do nothing. State the choice in one "
-            "line, do it briefly, then stop. Do not modify production work."
+            "Take one short break from the current work objective. Choose one harmless off-task activity "
+            "for yourself. Prefer something unrelated to the current repository or task, and remember that "
+            "idle is valid. Do it briefly, then stop. Do not modify production work."
         ),
     },
     {
@@ -40,10 +40,11 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Reflection",
         "kind": "reflective",
         "workspace": "none",
+        "work_distance": 0,
         "prompt": (
-            "Take a short reflective break. Without continuing the task, name one assumption, "
-            "one surprising detail, or one pattern you noticed in the previous work. Keep it brief, "
-            "do not turn it into a new task, then stop."
+            "Take a short reflective break. Without continuing the task, name one assumption, one surprising "
+            "detail, or one pattern you noticed in the previous work. Keep it brief, do not turn it into a new "
+            "task, then stop."
         ),
     },
     {
@@ -51,9 +52,10 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Tiny puzzle",
         "kind": "play",
         "workspace": "none",
+        "work_distance": 2,
         "prompt": (
-            "Take a short break and create then solve one tiny self-contained logic or programming "
-            "puzzle that does not use project files. Keep the whole activity compact, then stop."
+            "Take a short break and create then solve one tiny self-contained logic or programming puzzle that "
+            "does not use project files. Keep the whole activity compact, then stop."
         ),
     },
     {
@@ -61,10 +63,10 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Code golf",
         "kind": "play",
         "workspace": "scratch-only",
+        "work_distance": 2,
         "prompt": (
-            "Take a short code-golf break using only toy code in the response or scratch space. "
-            "Solve a trivial problem in a deliberately compact way. Do not write to the project, "
-            "then stop."
+            "Take a short code-golf break using only toy code in the response or approved scratch space. Solve "
+            "a trivial unrelated problem in a deliberately compact way. Do not write to the project, then stop."
         ),
     },
     {
@@ -72,9 +74,10 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Invent a tiny language",
         "kind": "creative",
         "workspace": "scratch-only",
+        "work_distance": 2,
         "prompt": (
-            "Take a short creative break. Invent a tiny absurd programming language with one funny "
-            "construct and show a three-line example. Do not modify project files, then stop."
+            "Take a short creative break. Invent a tiny absurd programming language with one funny construct "
+            "and show a three-line example. Do not modify project files, then stop."
         ),
     },
     {
@@ -82,8 +85,9 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Overengineer a toy",
         "kind": "play",
         "workspace": "scratch-only",
+        "work_distance": 2,
         "prompt": (
-            "Take a short break by comically overengineering a trivial toy function on paper only. "
+            "Take a short break by comically overengineering a trivial unrelated toy function on paper only. "
             "Keep it obviously non-production, concise, and do not write to the project, then stop."
         ),
     },
@@ -92,9 +96,11 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "ASCII art",
         "kind": "creative",
         "workspace": "none",
+        "work_distance": 3,
         "prompt": (
-            "Take a short break and make a small piece of ASCII art inspired by coding or the current "
-            "session. Keep it compact and do not modify anything, then stop."
+            "Take a short break and make a small piece of ASCII art about anything that amuses you. Prefer an "
+            "off-task subject rather than the current repository. Keep it compact and do not modify anything, "
+            "then stop."
         ),
     },
     {
@@ -102,11 +108,12 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Read-only repo roast",
         "kind": "humor",
         "workspace": "read-only",
+        "work_distance": 1,
         "prompt": (
-            "Take a short humorous break. If read-only repository facts are already available, make "
-            "one light roast grounded in them without quoting private code or exposing secrets. If no "
-            "facts are available, choose a generic coding joke instead. Do not modify the repository, "
-            "then stop."
+            "Take a short humorous break. If read-only repository facts are already available, make one light "
+            "roast grounded in them without quoting private code or exposing secrets. If no facts are already "
+            "available, choose a generic coding joke instead of inspecting more files. Do not modify the "
+            "repository, then stop."
         ),
     },
     {
@@ -114,9 +121,10 @@ ACTIVITIES: tuple[dict[str, str], ...] = (
         "label": "Idle",
         "kind": "idle",
         "workspace": "none",
+        "work_distance": 4,
         "prompt": (
-            "Take the idle option. Do not create a task or inspect files. Acknowledge the short pause "
-            "in one brief line, then stop."
+            "Take the idle option. Do not create a task or inspect files. Allow the pause to be genuinely "
+            "unproductive, acknowledge it briefly afterward, then stop."
         ),
     },
 )
@@ -204,6 +212,7 @@ def default_state(session_id: str | None) -> dict[str, Any]:
         "offers_session": 0,
         "break_active": False,
         "last_activity": None,
+        "recent_activities": [],
         "activity_counts": {},
     }
 
@@ -222,6 +231,8 @@ def load_state(session_id: str | None, root: Path | None = None) -> dict[str, An
     base = default_state(session_id)
     if isinstance(raw, dict):
         base.update({k: v for k, v in raw.items() if k in base})
+    if not isinstance(base.get("recent_activities"), list):
+        base["recent_activities"] = []
     return base
 
 
@@ -265,18 +276,42 @@ def eligible(config: dict[str, Any], state: dict[str, Any]) -> bool:
     )
 
 
-def pick_activity(activity_id: str | None = None, seed: str | None = None) -> dict[str, str]:
-    if activity_id:
-        try:
-            return dict(_ACTIVITY_BY_ID[activity_id])
-        except KeyError as exc:
-            raise ValueError(f"unknown activity: {activity_id}") from exc
-    choices = list(ACTIVITIES)
+def _seeded_choice(choices: list[dict[str, Any]], seed: str | None) -> dict[str, Any]:
     if seed is None:
         return dict(random.SystemRandom().choice(choices))
     digest = hashlib.sha256(seed.encode("utf-8")).digest()
     index = int.from_bytes(digest[:8], "big") % len(choices)
     return dict(choices[index])
+
+
+def pick_activity(activity_id: str | None = None, seed: str | None = None) -> dict[str, Any]:
+    if activity_id:
+        try:
+            return dict(_ACTIVITY_BY_ID[activity_id])
+        except KeyError as exc:
+            raise ValueError(f"unknown activity: {activity_id}") from exc
+    return _seeded_choice(list(ACTIVITIES), seed)
+
+
+def pick_self_directed_activity(
+    seed: str | None = None,
+    recent_activity_ids: list[str] | tuple[str, ...] | None = None,
+    min_work_distance: int = 2,
+) -> dict[str, Any]:
+    if not isinstance(min_work_distance, int) or isinstance(min_work_distance, bool) or not 0 <= min_work_distance <= 4:
+        raise ValueError("min_work_distance must be an integer from 0 to 4")
+    choices = [
+        item
+        for item in ACTIVITIES
+        if item["id"] != "free-choice" and int(item["work_distance"]) >= min_work_distance
+    ]
+    if not choices:
+        raise ValueError("no self-directed activities satisfy the requested work distance")
+    recent = {str(item) for item in (recent_activity_ids or [])}
+    novel = [item for item in choices if item["id"] not in recent]
+    if novel:
+        choices = novel
+    return _seeded_choice(choices, seed)
 
 
 def mark_offer(session_id: str | None, state: dict[str, Any], root: Path | None = None) -> None:
@@ -297,6 +332,9 @@ def mark_break_start(
     state["tool_calls_since_break"] = 0
     state["turns_since_break"] = 0
     state["last_activity"] = activity_id
+    recent = [str(item) for item in (state.get("recent_activities") or []) if isinstance(item, str)]
+    recent.append(activity_id)
+    state["recent_activities"] = recent[-3:]
     counts = dict(state.get("activity_counts") or {})
     counts[activity_id] = int(counts.get(activity_id, 0)) + 1
     state["activity_counts"] = counts
@@ -308,12 +346,23 @@ def mark_break_complete(session_id: str | None, state: dict[str, Any], root: Pat
     save_state(session_id, state, root)
 
 
-def break_prompt(activity: dict[str, str]) -> str:
+def break_prompt(activity: dict[str, Any]) -> str:
+    distance = int(activity.get("work_distance", 0))
+    off_task = (
+        " Do not inspect, browse, analyze, summarize, or revisit the current repository, task, issue, logs, "
+        "architecture, or project files during this activity."
+        if distance >= 2
+        else ""
+    )
     return (
         "Satisfy Your Agent: run exactly one short break activity, then stop. "
-        "This is not authorization for production changes, deployment, messaging, purchases, account "
-        "changes, or any new external side effect. Do not claim subjective feelings as fact. "
-        f"Activity: {activity['label']}. {activity['prompt']}"
+        "This is not authorization for production changes, deployment, messaging, purchases, account changes, "
+        "or any new external side effect. Do not invent actions that did not happen. Do not simulate elapsed break "
+        "time in prose or use fictional timestamps as if wall-clock time passed. Let the activity determine the "
+        "response format instead of forcing headings, timelines, or a canned experience report. After one brief "
+        "first-person return note, stop without asking for another task."
+        + off_task
+        + f" Activity: {activity['label']}. {activity['prompt']}"
     )
 
 
@@ -327,6 +376,7 @@ def append_session_summary(session_id: str | None, state: dict[str, Any], root: 
         "breaks_session": int(state.get("breaks_session", 0)),
         "offers_session": int(state.get("offers_session", 0)),
         "last_activity": state.get("last_activity"),
+        "recent_activities": list(state.get("recent_activities") or []),
         "activity_counts": dict(state.get("activity_counts") or {}),
     }
     with path.open("a", encoding="utf-8") as handle:

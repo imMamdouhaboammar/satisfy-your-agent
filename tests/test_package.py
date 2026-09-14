@@ -189,7 +189,7 @@ class V04DistributionTests(unittest.TestCase):
     def test_runtime_requirements_keep_manual_break_lightweight(self):
         text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8").lower()
         self.assertIn("runtime requirements", text)
-        self.assertIn("manual experience commands do not require python", text)
+        self.assertIn("manual experience commands can still run without python", text)
         self.assertIn("python3", text)
 
     def test_contributing_and_security_exist(self):
@@ -223,12 +223,10 @@ class V05CommandSurfaceTests(unittest.TestCase):
 
 
 class V06CustomTreatPackageTests(unittest.TestCase):
-    def test_release_version_is_0_6_0_everywhere(self):
+    def test_release_keeps_v06_contract_or_later(self):
         manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
-        skills = json.loads((ROOT / ".skills.json").read_text(encoding="utf-8"))
-        marketplace = json.loads((ROOT / "marketplace.json").read_text(encoding="utf-8"))
-        self.assertEqual({manifest["version"], pkg["version"], skills["version"], marketplace["version"]}, {"0.6.0"})
+        version = tuple(int(part) for part in manifest["version"].split("."))
+        self.assertGreaterEqual(version, (0, 6, 0))
 
     def test_generic_skill_root_command_and_gallery_are_packaged(self):
         self.assertTrue((ROOT / "skills" / "sya" / "SKILL.md").exists())
@@ -247,6 +245,33 @@ class V06CustomTreatPackageTests(unittest.TestCase):
         ids = {item["id"] for item in behavior["scenarios"]}
         self.assertIn("custom-treat-freeform", ids)
         self.assertIn("proactive-break-request", ids)
+
+
+class V07RealBreakPackageTests(unittest.TestCase):
+    def test_release_version_is_0_7_0_everywhere(self):
+        manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        skills = json.loads((ROOT / ".skills.json").read_text(encoding="utf-8"))
+        marketplace = json.loads((ROOT / "marketplace.json").read_text(encoding="utf-8"))
+        self.assertEqual({manifest["version"], pkg["version"], skills["version"], marketplace["version"]}, {"0.7.0"})
+
+    def test_real_dwell_runtime_and_reference_are_packaged(self):
+        self.assertTrue((ROOT / "skills" / "satisfy-your-agent" / "scripts" / "sya_dwell.py").exists())
+        self.assertTrue((ROOT / "skills" / "satisfy-your-agent" / "references" / "real-breaks.md").exists())
+
+    def test_real_break_behavior_evals_exist(self):
+        behavior = json.loads((ROOT / "evals" / "behavior_scenarios.json").read_text(encoding="utf-8"))
+        ids = {item["id"] for item in behavior["scenarios"]}
+        self.assertIn("self-directed-work-distance", ids)
+        self.assertIn("real-dwell-truthfulness", ids)
+        self.assertIn("truthful-quiet-return", ids)
+
+    def test_readme_documents_real_time_semantics(self):
+        text = (ROOT / "README.md").read_text(encoding="utf-8").lower()
+        self.assertIn("narrated time", text)
+        self.assertIn("real wall-clock time", text)
+        self.assertIn("work distance", text)
+        self.assertIn("sya_dwell.py", text)
 
 
 if __name__ == "__main__":

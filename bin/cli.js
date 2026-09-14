@@ -26,6 +26,8 @@ Interactive command skills are installed separately by install.sh:
   Gemini CLI      /sya <treat>  /sya:break  /sya:menu
   Codex           $sya <treat>  $sya-break  $sya-menu
 
+Timed breaks use the bundled measured dwell helper internally when supported.
+
 Examples:
   satisfy-your-agent status
   satisfy-your-agent pick --json
@@ -43,7 +45,7 @@ Requires: Python 3 (stdlib only, no third-party packages)
 }
 
 if (args.includes("--version") || args.includes("-v")) {
-  console.log("0.6.0");
+  console.log("0.7.0");
   process.exit(0);
 }
 
