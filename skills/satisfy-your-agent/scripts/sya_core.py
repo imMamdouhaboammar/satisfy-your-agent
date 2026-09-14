@@ -5,7 +5,7 @@ import json
 import os
 import random
 import tempfile
-from dataclasses import dataclass
+import time
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +15,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "hook_mode": "off",
     "min_tool_calls": 12,
     "min_turns_between_breaks": 3,
+    "min_elapsed_seconds": 0,
     "max_breaks_per_session": 2,
     "workspace_policy": "read-only",
     "telemetry": "aggregate-local",
@@ -155,7 +156,7 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
     merged = {**DEFAULT_CONFIG, **config}
     if merged["hook_mode"] not in VALID_MODES:
         raise ConfigError(f"hook_mode must be one of {sorted(VALID_MODES)}")
-    for key in ("min_tool_calls", "min_turns_between_breaks", "max_breaks_per_session"):
+    for key in ("min_tool_calls", "min_turns_between_breaks", "min_elapsed_seconds", "max_breaks_per_session"):
         value = merged[key]
         if not isinstance(value, int) or isinstance(value, bool) or value < 0:
             raise ConfigError(f"{key} must be a non-negative integer")
@@ -196,6 +197,7 @@ def default_state(session_id: str | None) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "session_key": session_key(session_id),
+        "started_at_epoch_ms": int(time.time() * 1000),
         "tool_calls_since_break": 0,
         "turns_since_break": 0,
         "breaks_session": 0,
@@ -227,6 +229,14 @@ def save_state(session_id: str | None, state: dict[str, Any], root: Path | None 
     _atomic_write_json(state_path(session_id, root), state)
 
 
+def session_elapsed_seconds(state: dict[str, Any], now_epoch_ms: int | None = None) -> int:
+    started = int(state.get("started_at_epoch_ms") or 0)
+    if started <= 0:
+        return 0
+    now = int(now_epoch_ms if now_epoch_ms is not None else time.time() * 1000)
+    return max(0, (now - started) // 1000)
+
+
 def record_tool_call(session_id: str | None, root: Path | None = None) -> dict[str, Any]:
     state = load_state(session_id, root)
     state["tool_calls_since_break"] = int(state["tool_calls_since_break"]) + 1
@@ -250,6 +260,7 @@ def eligible(config: dict[str, Any], state: dict[str, Any]) -> bool:
         not bool(state["break_active"])
         and int(state["tool_calls_since_break"]) >= int(config["min_tool_calls"])
         and int(state["turns_since_break"]) >= int(config["min_turns_between_breaks"])
+        and session_elapsed_seconds(state) >= int(config["min_elapsed_seconds"])
         and used < int(config["max_breaks_per_session"])
     )
 
