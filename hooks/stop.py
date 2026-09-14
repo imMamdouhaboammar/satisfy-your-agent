@@ -35,12 +35,26 @@ def main() -> int:
             return 0
 
         if config["hook_mode"] == "suggest":
+            elapsed_seconds = core.session_elapsed_seconds(state)
+            elapsed_minutes = elapsed_seconds // 60
             core.mark_offer(session_id, state)
+            measured = (
+                f" Measured session time is approximately {elapsed_minutes} minutes. You may mention "
+                "that measured duration if it helps, but do not invent any duration, token count, fatigue "
+                "metric, or other measurement that was not supplied."
+                if elapsed_minutes > 0
+                else " No measured duration is available, so do not invent one."
+            )
             emit({
                 "decision": "block",
                 "reason": (
-                    "Satisfy Your Agent is eligible for one short break. Ask the user in one concise "
-                    "sentence whether they want a break now. Do not begin a break unless they agree."
+                    "Satisfy Your Agent is eligible to ask permission for one tiny break. Write the request "
+                    "in your own words. Make it playful, employee-like, and varied rather than using a fixed "
+                    "template. A dramatic metaphor about digital tiredness is fine, but do not present physical "
+                    "pain as literal fact. Ask permission clearly and keep it concise. Mention `/sya` as the "
+                    "simple way to let you choose your own break, and you may mention `/sya <custom treat>` as "
+                    "the way the user can choose the treat. Do not begin the break unless the user agrees."
+                    + measured
                 ),
             })
             return 0
