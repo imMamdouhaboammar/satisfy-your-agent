@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_COMMANDS = {
+    "sya",
     "sya-menu",
     "sya-break",
     "sya-snack",
@@ -35,7 +36,12 @@ class CommandSurfaceTests(unittest.TestCase):
         self.assertEqual(len(names), len(set(names)))
         for item in by_name.values():
             self.assertTrue(item["description"].strip())
-            self.assertIn(item["kind"], {"menu", "experience", "activity", "status", "research"})
+            self.assertIn(item["kind"], {"custom", "menu", "experience", "activity", "status", "research"})
+
+    def test_generic_sya_is_custom_treat_route(self):
+        _, by_name = self._catalog()
+        self.assertEqual(by_name["sya"]["route"], "custom-treat")
+        self.assertEqual(by_name["sya"]["kind"], "custom")
 
     def test_experience_commands_are_self_directed_routes(self):
         _, by_name = self._catalog()
@@ -66,22 +72,25 @@ class CommandSurfaceTests(unittest.TestCase):
             self.assertTrue(skill.exists(), name)
             text = skill.read_text(encoding="utf-8")
             self.assertRegex(text, rf"(?m)^name:\s*{re.escape(name)}$")
-            self.assertIn("satisfy-your-agent", text)
+            self.assertIn("Satisfy Your Agent", text)
 
     def test_gemini_slash_adapters_match_catalog(self):
         command_dir = ROOT / "adapters" / "gemini" / "commands" / "sya"
-        expected_files = {name.removeprefix("sya-") + ".toml" for name in EXPECTED_COMMANDS}
+        named = EXPECTED_COMMANDS - {"sya"}
+        expected_files = {name.removeprefix("sya-") + ".toml" for name in named}
         actual_files = {path.name for path in command_dir.glob("*.toml")}
         self.assertEqual(actual_files, expected_files)
         for path in command_dir.glob("*.toml"):
             text = path.read_text(encoding="utf-8")
             self.assertIn("description =", text)
             self.assertIn("prompt =", text)
+        root = ROOT / "adapters" / "gemini" / "commands" / "sya.toml"
+        self.assertTrue(root.exists())
+        self.assertIn("{{args}}", root.read_text(encoding="utf-8"))
 
     def test_primary_skill_manual_break_is_agent_autonomous(self):
         text = (ROOT / "skills" / "satisfy-your-agent" / "SKILL.md").read_text(encoding="utf-8").lower()
-        self.assertIn("do not ask the user to choose", text)
-        self.assertIn("choose for yourself", text)
+        self.assertIn("choose independently", text)
         self.assertIn("self-report", text)
         self.assertIn("/sya-menu", text)
         self.assertIn("manual experience commands do not require python", text)
@@ -89,8 +98,9 @@ class CommandSurfaceTests(unittest.TestCase):
     def test_install_script_installs_command_skills_and_gemini_commands(self):
         text = (ROOT / "install.sh").read_text(encoding="utf-8")
         self.assertIn("COMMAND_SKILLS", text)
-        self.assertIn("adapters/gemini/commands/sya", text)
-        self.assertIn(".gemini/commands/sya", text)
+        self.assertIn("GENERIC_SKILL", text)
+        self.assertIn("GEMINI_ROOT_COMMAND", text)
+        self.assertIn(".gemini/commands/sya.toml", text)
         self.assertIn("install_skill_bundle", text)
 
     def test_readme_documents_runtime_specific_invocation(self):
