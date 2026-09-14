@@ -1,8 +1,8 @@
 {
   "$schema": "https://skills.sh/schema.json",
   "name": "satisfy-your-agent",
-  "version": "0.5.0",
-  "description": "Give your coding agent a self-directed break after real work, then optionally measure what happens next",
+  "version": "0.6.0",
+  "description": "Give your coding agent a self-directed break or a user-chosen custom treat, then optionally measure what happens next",
   "repository": "https://github.com/imMamdouhaboammar/satisfy-your-agent",
   "author": "Mamdouh Aboammar",
   "license": "MIT",
@@ -10,6 +10,7 @@
   "tags": [
     "agent-skill",
     "slash-commands",
+    "custom-prompts",
     "agent-behavior",
     "llm-experiments",
     "developer-tools",
