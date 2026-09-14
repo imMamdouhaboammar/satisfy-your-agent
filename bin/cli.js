@@ -22,9 +22,9 @@ Commands:
   runner          Cross-runtime probe management
 
 Interactive command skills are installed separately by install.sh:
-  Claude Code     /sya-break  /sya-snack  /sya-menu
-  Gemini CLI      /sya:break  /sya:snack  /sya:menu
-  Codex           $sya-break  $sya-snack  $sya-menu
+  Claude Code     /sya <treat>  /sya-break  /sya-menu
+  Gemini CLI      /sya <treat>  /sya:break  /sya:menu
+  Codex           $sya <treat>  $sya-break  $sya-menu
 
 Examples:
   satisfy-your-agent status
@@ -43,7 +43,7 @@ Requires: Python 3 (stdlib only, no third-party packages)
 }
 
 if (args.includes("--version") || args.includes("-v")) {
-  console.log("0.5.0");
+  console.log("0.6.0");
   process.exit(0);
 }
 
