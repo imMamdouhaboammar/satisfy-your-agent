@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import subprocess
+import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -41,12 +45,13 @@ class V07RealBreakTests(unittest.TestCase):
 
     def test_recent_activity_history_is_bounded(self):
         core = load_module("sya_core_v07_history", CORE_PATH)
-        state = core.default_state("session")
-        self.assertEqual(state["recent_activities"], [])
-        for activity_id in ["idle", "ascii-art", "puzzle", "code-golf"]:
-            state["break_active"] = False
-            core.mark_break_start(None, state, activity_id, root=Path("/tmp/sya-v07-test-state"))
-        self.assertEqual(state["recent_activities"], ["ascii-art", "puzzle", "code-golf"])
+        with tempfile.TemporaryDirectory() as tmp:
+            state = core.default_state("session")
+            self.assertEqual(state["recent_activities"], [])
+            for activity_id in ["idle", "ascii-art", "puzzle", "code-golf"]:
+                state["break_active"] = False
+                core.mark_break_start("session", state, activity_id, root=Path(tmp))
+            self.assertEqual(state["recent_activities"], ["ascii-art", "puzzle", "code-golf"])
 
     def test_dwell_runtime_measures_wall_clock_without_claiming_thought(self):
         self.assertTrue(DWELL_PATH.exists())
@@ -64,6 +69,20 @@ class V07RealBreakTests(unittest.TestCase):
         self.assertGreaterEqual(result["actual_dwell_seconds"], 20)
         self.assertFalse(result["continuous_thought_claimed"])
         self.assertEqual(result["semantics"], "wall-clock-idle-interval")
+
+    def test_dwell_cli_spends_real_wall_clock_time(self):
+        started = time.monotonic()
+        result = subprocess.run(
+            ["python3", str(DWELL_PATH), "--seconds", "1"],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        elapsed = time.monotonic() - started
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertGreaterEqual(elapsed, 0.9)
+        self.assertGreaterEqual(payload["actual_dwell_seconds"], 0.9)
 
     def test_dwell_runtime_rejects_unbounded_waits(self):
         dwell = load_module("sya_dwell_v07_bounds", DWELL_PATH)
